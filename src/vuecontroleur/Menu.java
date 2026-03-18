@@ -17,15 +17,15 @@ public class Menu extends JPanel {
     public Menu() {
 
         //importation des icônes pour le menu
-        Image icoTapisDroite = new ImageIcon("./data/sprites/buildings/belt_top.png").getImage();
-        Image icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
-        Image icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
-        
+        ImageIcon icoTapisDroite = new ImageIcon("./data/sprites/buildings/belt_top.png");
+        ImageIcon icoMine = new ImageIcon("./data/sprites/buildings/miner.png");
+        ImageIcon icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png");
+
 
         BTapis = new JButton("Tapis",icoTapisDroite);
         BMine = new JButton("Mine",icoMine);
         BPoubelle = new JButton("Poubelle",icoPoubelle);
-        //coucou
+
         add(BTapis);
         add(BMine);
         add(BPoubelle);
