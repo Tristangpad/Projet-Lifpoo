@@ -6,9 +6,6 @@ import modele.item.ItemShape;
 public class Jeu extends Thread{
     private Plateau plateau;
 
-
-
-
     public Jeu() {
         plateau = new Plateau();
 
@@ -16,7 +13,6 @@ public class Jeu extends Thread{
         plateau.setMachine(5, 5, new Poubelle());
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
-
 
         start();
 
