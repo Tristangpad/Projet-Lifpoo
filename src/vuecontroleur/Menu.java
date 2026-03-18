@@ -25,7 +25,7 @@ public class Menu extends JPanel {
         BTapis = new JButton("Tapis",icoTapisDroite);
         BMine = new JButton("Mine",icoMine);
         BPoubelle = new JButton("Poubelle",icoPoubelle);
-
+        //coucou
         add(BTapis);
         add(BMine);
         add(BPoubelle);
