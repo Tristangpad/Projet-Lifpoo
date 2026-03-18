@@ -7,7 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
-
+import vuecontroleur.Menu;
 import modele.item.Item;
 import modele.item.ItemColor;
 import modele.item.ItemShape;
@@ -26,6 +26,12 @@ public class VueControleur extends JFrame implements Observer {
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
     private static final int pxCase = 82; // nombre de pixel par case
+
+
+    private JFrame frame;
+    private Menu menu;
+
+
     // icones affichées dans la grille
     private Image icoRouge;
     private Image icoTapisDroite;
@@ -33,10 +39,11 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoMine;
 
     private JComponent grilleIP;
-
     private boolean mousePressed = false; // permet de mémoriser l'état de la souris
-
     private ImagePanel[][] tabIP; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône background et front, suivant ce qui est présent dans le modèle)
+
+    private JPanel menuOverlay;
+    private GridBagConstraints contrainteMenu;
 
 
     public VueControleur(Jeu _jeu) {
@@ -44,6 +51,7 @@ public class VueControleur extends JFrame implements Observer {
         plateau = jeu.getPlateau();
         sizeX = plateau.SIZE_X;
         sizeY = plateau.SIZE_Y;
+        frame = new JFrame();
 
         chargerLesIcones();
         placerLesComposantsGraphiques();
@@ -73,16 +81,35 @@ public class VueControleur extends JFrame implements Observer {
         setSize(sizeX * pxCase, sizeX * pxCase);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
+        menu = new Menu();
+        menuOverlay = (JPanel) getGlassPane();
+        menuOverlay.setLayout(new GridBagLayout());
+
+
         grilleIP = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
-
-
         tabIP = new ImagePanel[sizeX][sizeY];
+
+
+
+
+        contrainteMenu = new GridBagConstraints();
+        contrainteMenu.anchor = GridBagConstraints.SOUTH;
+        contrainteMenu.weighty = 1.0;
+        contrainteMenu.fill = GridBagConstraints.HORIZONTAL;
+        contrainteMenu.ipadx = 20;
+        contrainteMenu.ipady = 20;
+
+        menuOverlay.add(menu, contrainteMenu);
+        menuOverlay.setVisible(true);
+
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 ImagePanel iP = new ImagePanel();
 
+
                 tabIP[x][y] = iP; // on conserve les cases graphiques dans tabJLabel pour avoir un accès pratique à celles-ci (voir mettreAJourAffichage() )
+
 
                 final int xx = x; // permet de compiler la classe anonyme ci-dessous
                 final int yy = y;
@@ -117,9 +144,11 @@ public class VueControleur extends JFrame implements Observer {
 
 
                 grilleIP.add(iP);
+
             }
         }
         add(grilleIP);
+
     }
 
     
@@ -128,13 +157,14 @@ public class VueControleur extends JFrame implements Observer {
      */
     private void mettreAJourAffichage() {
 
-
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
 
                 tabIP[x][y].setBackground((Image) null);
 
                 tabIP[x][y].setFront(null);
+
+
 
                 Case c = plateau.getCases()[x][y];
 
