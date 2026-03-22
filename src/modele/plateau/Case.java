@@ -28,8 +28,8 @@ public class Case {
         }
     }
     //a voir
-    public void createGisement(Item g) {
-        ItemShape gisement = (ItemShape) g; // cast
+    public void setGisement(Item g) {
+        this.gisement = g; // cast
     }
 
 
@@ -37,9 +37,12 @@ public class Case {
         return machine;
     }
 
+    public Item getGisement() { return gisement; }
+
     public Case(Plateau _plateau) {
 
         plateau = _plateau;
+        initCase();
     }
 
 }
