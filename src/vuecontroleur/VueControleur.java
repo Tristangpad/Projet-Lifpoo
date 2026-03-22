@@ -37,6 +37,7 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoTapisDroite;
     private Image icoPoubelle;
     private Image icoMine;
+    private Image icoCutter;
 
     private JComponent grilleIP;
     private boolean mousePressed = false; // permet de mémoriser l'état de la souris
@@ -70,6 +71,7 @@ public class VueControleur extends JFrame implements Observer {
 
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
         icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
+        icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
 
     }
 
@@ -91,7 +93,7 @@ public class VueControleur extends JFrame implements Observer {
 
 
 
-
+        //mise en forme du menue de choix de machine
         contrainteMenu = new GridBagConstraints();
         contrainteMenu.anchor = GridBagConstraints.SOUTH;
         contrainteMenu.weighty = 1.0;
@@ -99,8 +101,15 @@ public class VueControleur extends JFrame implements Observer {
         contrainteMenu.ipadx = 20;
         contrainteMenu.ipady = 20;
 
+        //ajout du menue avec sa mise en forme a l'overlay générale du jeux qui permet une superposition entre les 2
         menuOverlay.add(menu, contrainteMenu);
         menuOverlay.setVisible(true);
+
+        //check le choix de l'utilisateur pour savoir si il change de machine a placer
+        menu.getBTapis().addActionListener(e -> jeu.setMachineChoisie(new Tapis()));
+        menu.getBMine().addActionListener(e -> jeu.setMachineChoisie(new Mine()));
+        menu.getBPoubelle().addActionListener(e -> jeu.setMachineChoisie(new Poubelle()));
+        menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
 
 
         for (int y = 0; y < sizeY; y++) {
@@ -178,6 +187,8 @@ public class VueControleur extends JFrame implements Observer {
                         tabIP[x][y].setBackground(icoPoubelle);
                     } else if (m instanceof Mine) {
                         tabIP[x][y].setBackground(icoMine);
+                    } else if (m instanceof Mine) {
+                        tabIP[x][y].setBackground(icoCutter);
                     }
 
                     Item current = m.getCurrent();

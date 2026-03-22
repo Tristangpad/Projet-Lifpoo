@@ -7,6 +7,7 @@ package modele.plateau;
 
 
 
+import modele.item.Item;
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -54,6 +55,15 @@ public class Plateau extends Observable implements Runnable {
         notifyObservers();
     }
 
+    /**
+     * transforme une case en gisement
+     */
+    public void transformeCaseEnGisement(int x, int y, Item forme)  {
+            grilleCases[x][y].createGisement(forme);
+            setChanged();
+            notifyObservers();
+    }
+
 
     /**
      * Indique si p est contenu dans la grille
@@ -86,3 +96,4 @@ public class Plateau extends Observable implements Runnable {
         notifyObservers();
     }
 }
+
