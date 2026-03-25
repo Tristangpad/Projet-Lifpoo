@@ -1,9 +1,13 @@
 package modele.item;
 
 public class ItemShape extends Item {
+
+    private String configurationItem;
+
     private SubShape[] tabSubShapes;
     private Color[] tabColors;
     public enum Layer {one, two, three};
+
 
     public SubShape[] getSubShapes(Layer l) {
         switch(l) {
@@ -30,6 +34,8 @@ public class ItemShape extends Item {
      *            str.length multiple de 4
      */
     public ItemShape(String str) {
+
+        this.configurationItem = str;
 
         tabSubShapes = new SubShape[str.length()/2 ];
         tabColors = new Color[str.length()/2];
@@ -90,4 +96,5 @@ public class ItemShape extends Item {
 
     }
 
+    public String getConfigItem() { return configurationItem; }
 }
