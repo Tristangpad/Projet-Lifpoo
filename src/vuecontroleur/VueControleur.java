@@ -27,7 +27,7 @@ public class VueControleur extends JFrame implements Observer {
     private final int sizeY;
     private static final int pxCase = 82; // nombre de pixel par case
 
-
+    private JProgressBar barProgression;
     private JFrame frame;
     private Menu menu;
 
@@ -38,6 +38,7 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoPoubelle;
     private Image icoMine;
     private Image icoCutter;
+    private Image icoZoneDepot;
 
     private JComponent grilleIP;
     private boolean mousePressed = false; // permet de mémoriser l'état de la souris
@@ -72,7 +73,7 @@ public class VueControleur extends JFrame implements Observer {
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
         icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
-
+        icoZoneDepot = new ImageIcon("./data/sprites/buildings/hub.png").getImage();
     }
 
 
@@ -87,6 +88,7 @@ public class VueControleur extends JFrame implements Observer {
         menuOverlay = (JPanel) getGlassPane();
         menuOverlay.setLayout(new GridBagLayout());
 
+        barProgression = new JProgressBar(0,100);
 
         grilleIP = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
         tabIP = new ImagePanel[sizeX][sizeY];
@@ -101,6 +103,12 @@ public class VueControleur extends JFrame implements Observer {
         contrainteMenu.ipadx = 20;
         contrainteMenu.ipady = 20;
 
+        //mise en forme de la bar de progression des niveaux
+        barProgression.setStringPainted(true);
+        barProgression.setPreferredSize(new Dimension(sizeX * pxCase, 30)); //de Claude ca
+        add(barProgression, BorderLayout.NORTH); //ca aussi
+
+
         //ajout du menue avec sa mise en forme a l'overlay générale du jeux qui permet une superposition entre les 2
         menuOverlay.add(menu, contrainteMenu);
         menuOverlay.setVisible(true);
@@ -110,6 +118,7 @@ public class VueControleur extends JFrame implements Observer {
         menu.getBMine().addActionListener(e -> jeu.setMachineChoisie(new Mine()));
         menu.getBPoubelle().addActionListener(e -> jeu.setMachineChoisie(new Poubelle()));
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
+
 
 
         for (int y = 0; y < sizeY; y++) {
@@ -187,9 +196,14 @@ public class VueControleur extends JFrame implements Observer {
                         tabIP[x][y].setBackground(icoPoubelle);
                     } else if (m instanceof Mine) {
                         tabIP[x][y].setBackground(icoMine);
-                    } else if (m instanceof Mine) {
+                    } else if (m instanceof Cutter) {
                         tabIP[x][y].setBackground(icoCutter);
+                    } else if (m instanceof ZoneDepot) {
+                        tabIP[x][y].setBackground(icoZoneDepot);
                     }
+
+
+
 
                     Item current = m.getCurrent();
 
@@ -200,8 +214,22 @@ public class VueControleur extends JFrame implements Observer {
                         // tabIP[x][y].setFront(); TODO : placer l'icone des couleurs approprié
                     }
 
+
+
+                }
+                Item gisement = c.getGisement();
+                if (gisement != null) {
+                    if (gisement instanceof ItemShape) {
+                        tabIP[x][y].setShape((ItemShape) gisement);
+                    }
                 }
 
+                Niveau n = jeu.getNiveauActuel();
+                if (n != null) {
+                    int progression = n.getProgression() * 100/n.getObjectif();
+                    barProgression.setValue(progression);
+                    barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1) +" — "+ progression +"%" + " | Objectif : "+ n.getObjectif());
+                }
 
 
 

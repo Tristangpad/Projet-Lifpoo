@@ -7,11 +7,19 @@ public class Jeu extends Thread{
     private Plateau plateau;
     private Machine machineChoisie = new Tapis();//utilisation d'un supplier ?
 
+    //definition des variables pour les niveaux
+    private int numeroNiveau = 0;
+    private Niveau niveauActuel;
+    private static final Niveau[] NIVEAU = {
+            new Niveau("CrCrCrCr", 5),
+            new Niveau("CrCr---", 10),
+    };
+
     public Jeu() {
         plateau = new Plateau();
 
         plateau.transformeCaseEnGisement(5,10, new ItemShape("Cr----Cr"));
-        plateau.transformeCaseEnGisement(3,10, new ItemShape("CbCbCrCr"));
+        plateau.transformeCaseEnGisement(3,10, new ItemShape("CrCrCrCr"));
         plateau.transformeCaseEnGisement(3,3, new ItemShape("CrCrCbCr"));
 
         plateau.setMachine(5, 10, new Mine());
@@ -19,14 +27,10 @@ public class Jeu extends Thread{
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
 
-
+        chargerNiveau(numeroNiveau);
 
         start();
 
-    }
-
-    public Plateau getPlateau() {
-        return plateau;
     }
 
     public void setMachineChoisie(Machine machine) {
@@ -55,6 +59,29 @@ public class Jeu extends Thread{
         { plateau.setMachine(x, y, new Cutter()); }
     }
 
+
+
+    public void chargerNiveau(int num) {
+        niveauActuel = NIVEAU[num];
+        plateau.setMachine(3, 7, new ZoneDepot(niveauActuel));
+    }
+
+    public void niveauSuivant() {
+        if (numeroNiveau < NIVEAU.length - 1) {
+            numeroNiveau++;
+            niveauActuel = NIVEAU[numeroNiveau];
+            plateau.setNiveauActuel(niveauActuel);
+        }
+    }
+
+    public Plateau getPlateau() {
+        return plateau;
+    }
+
+    public int getNumeroNiveau() {return numeroNiveau;}
+
+    public Niveau getNiveauActuel() { return niveauActuel; }
+
     public void run() {
         jouerPartie();
     }
@@ -64,6 +91,9 @@ public class Jeu extends Thread{
         while(true) {
             try {
                 plateau.run();
+                if (niveauActuel != null && niveauActuel.niveauFinis()) {
+                    niveauSuivant();
+                }
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
