@@ -45,7 +45,14 @@ public class Jeu extends Thread{
     }
 
     public void slide(int x, int y) {
-        plateau.setMachine(x, y, machineChoisie);
+        if (machineChoisie instanceof Tapis)
+        { plateau.setMachine(x, y, new Tapis()); }
+        else if (machineChoisie instanceof Mine)
+        { plateau.setMachine(x, y, new Mine()); }
+        else if (machineChoisie instanceof Poubelle)
+        { plateau.setMachine(x, y, new Poubelle()); }
+        else if (machineChoisie instanceof Cutter)
+        { plateau.setMachine(x, y, new Cutter()); }
     }
 
     public void run() {

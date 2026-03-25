@@ -14,14 +14,11 @@ public class Mine extends Machine {
         if (new Random().nextInt(4) == 0) {
             if (c == null) return;
 
-            Item gisement = c.getGisement();
-            current.add(new ItemShape( ( (ItemShape) gisement).getConfigItem() ) );
-            nb_obj++;
-            System.out.println("vient de creer un objet %nb_obj");
 
-        }else
-        {
-            current.add(new ItemShape("CrCbCrCb")); //tempo si pas de gisement
+            Item gisement = c.getGisement();
+            if  (gisement == null) return;
+            current.add(new ItemShape( ( (ItemShape) gisement).getConfigItem() ) );
+            System.out.println("vient de creer un objet %nb_obj");
         }
 
     }

@@ -6,7 +6,7 @@ import modele.item.ItemShape;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public abstract class Machine implements Runnable {
+public class Machine implements Runnable {
     LinkedList<Item> current;
 
     Case c;
