@@ -15,19 +15,34 @@ public class Case {
     protected Machine machine;
     protected Item gisement; // certaines cases sont des gisements, pour placer des mines
 
+    public void initCase(){
+        this.machine = null;
+        this.gisement = null;
+
+    }
 
     public void setMachine(Machine m) {
-        machine = m;
-        m.setCase(this);
+        if(this.getMachine() == null){
+            machine = m;
+            m.setCase(this);
+        }
     }
+    //a voir
+    public void setGisement(Item g) {
+        this.gisement = g; // cast
+    }
+
 
     public Machine getMachine() {
         return machine;
     }
 
+    public Item getGisement() { return gisement; }
+
     public Case(Plateau _plateau) {
 
         plateau = _plateau;
+        initCase();
     }
 
 }
