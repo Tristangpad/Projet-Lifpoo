@@ -8,6 +8,9 @@ package modele.plateau;
 
 
 import modele.item.Item;
+import modele.item.ItemShape;
+import modele.plateau.Niveau;
+
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -21,6 +24,8 @@ public class Plateau extends Observable implements Runnable {
     private HashMap<Case, Point> map = new HashMap<Case, Point>(); // permet de récupérer la position d'une case à partir de sa référence
     private Case[][] grilleCases = new Case[SIZE_X][SIZE_Y]; // permet de récupérer une case à partir de ses coordonnées
 
+    private Niveau niveauActuel;
+
     public Plateau() {
         initPlateauVide();
     }
@@ -30,7 +35,7 @@ public class Plateau extends Observable implements Runnable {
     }
 
     public Case getCase(Case source, Direction d) {
-        
+
         Point p = map.get(source);
         return caseALaPosition(new Point(p.x+d.dx, p.y+d.dy));
 
@@ -50,6 +55,7 @@ public class Plateau extends Observable implements Runnable {
     }
 
     public void setMachine(int x, int y, Machine m) {
+        if( m instanceof Mine && (grilleCases[x][y].getGisement() == null) ) return;
         grilleCases[x][y].setMachine(m);
         setChanged();
         notifyObservers();
@@ -59,9 +65,9 @@ public class Plateau extends Observable implements Runnable {
      * transforme une case en gisement
      */
     public void transformeCaseEnGisement(int x, int y, Item forme)  {
-            grilleCases[x][y].createGisement(forme);
-            setChanged();
-            notifyObservers();
+        grilleCases[x][y].setGisement(forme);
+        setChanged();
+        notifyObservers();
     }
 
 
@@ -82,6 +88,21 @@ public class Plateau extends Observable implements Runnable {
     }
 
 
+
+    public void setNiveauActuel(Niveau n) {
+        this.niveauActuel = n;
+        for (int x = 0; x < SIZE_X; x++) {
+            for (int y = 0; y < SIZE_Y; y++) {
+                Machine m = grilleCases[x][y].getMachine();
+                if (m instanceof ZoneDepot) {
+                    ((ZoneDepot) m).setNiveau(n);
+                }
+            }
+        }
+        setChanged();
+        notifyObservers();
+    }
+
     @Override
     public void run() {
         for (int x = 0; x < SIZE_X; x++) {
@@ -96,4 +117,3 @@ public class Plateau extends Observable implements Runnable {
         notifyObservers();
     }
 }
-
