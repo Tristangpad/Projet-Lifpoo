@@ -8,8 +8,6 @@ package modele.plateau;
 
 
 import modele.item.Item;
-import modele.item.ItemShape;
-
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -61,7 +59,7 @@ public class Plateau extends Observable implements Runnable {
      * transforme une case en gisement
      */
     public void transformeCaseEnGisement(int x, int y, Item forme)  {
-            grilleCases[x][y].setGisement(forme);
+            grilleCases[x][y].createGisement(forme);
             setChanged();
             notifyObservers();
     }
