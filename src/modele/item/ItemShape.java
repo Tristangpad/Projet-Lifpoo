@@ -65,6 +65,34 @@ public class ItemShape extends Item {
 
 
     // TODO : écrire l'ensemble des fonctions de transformation souhaitées, définir les paramètres éventuels (sens, axe, etc.)
+
+
+    public ItemShape[] couper(){
+
+        String moitierGauche = ""+ adapterShape(tabSubShapes[0]) + adapterCouleur(tabColors[0]) + "--" + adapterShape(tabSubShapes[2]) + adapterCouleur(tabColors[2]) + "--";
+        String moitierDroite = "--" + adapterShape(tabSubShapes[1]) + adapterCouleur(tabColors[1]) + "--" + adapterShape(tabSubShapes[3]) + adapterCouleur(tabColors[3]) + "";
+
+        //debug
+        System.out.println(moitierGauche);
+        System.out.println(moitierDroite);
+
+        ItemShape itemConteneur[] = new ItemShape[] {new ItemShape(moitierGauche),new ItemShape(moitierDroite)};
+        return itemConteneur;
+    }
+
+    public String adapterShape(SubShape s){
+        if(s == SubShape.Carre)return "C";
+        if(s == SubShape.None)return "-";
+        return "-";
+    }
+
+    public String adapterCouleur(Color c){
+        if(c == Color.Red)return "r";
+        if(c == Color.White)return "b";
+        return "-";
+    }
+
+
     public void rotate() {
 
         SubShape[] bufferSubShapes = new SubShape[4];
