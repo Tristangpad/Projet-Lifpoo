@@ -63,6 +63,17 @@ public class Machine implements Runnable {
 
     }
 
+    public void rotate90() {
+        switch (this.d) {
+            case North: this.d = Direction.East;  break;
+            case East:  this.d= Direction.South; break;
+            case South: this.d = Direction.West;  break;
+            case West:  this.d = Direction.North; break;
+        }
+    }
+
+    public Direction getDirection(){return d;}
+
 
 
 }

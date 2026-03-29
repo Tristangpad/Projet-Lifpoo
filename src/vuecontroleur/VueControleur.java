@@ -35,6 +35,8 @@ public class VueControleur extends JFrame implements Observer {
     // icones affichées dans la grille
     private Image icoRouge;
     private Image icoTapisDroite;
+    private Image icoTapisDroit;
+    private Image icoTapisGauche;
     private Image icoPoubelle;
     private Image icoMine;
     private Image icoCutter;
@@ -68,7 +70,9 @@ public class VueControleur extends JFrame implements Observer {
     private void chargerLesIcones() {
 
         icoRouge = new ImageIcon("./data/sprites/colors/blue.png").getImage();
-        icoTapisDroite = new ImageIcon("./data/sprites/buildings/belt_top.png").getImage();
+        icoTapisDroit = new ImageIcon("./data/sprites/buildings/belt_top.png").getImage();
+        icoTapisGauche = new ImageIcon("./data/sprites/buildings/belt_left.png").getImage();
+        icoTapisDroite = new ImageIcon("./data/sprites/buildings/belt_right.png").getImage();
 
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
         icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
@@ -150,7 +154,7 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         mousePressed = true;
-                        jeu.press(xx, yy);
+                        //jeu.press(xx, yy);
                     }
 
                     @Override
@@ -182,6 +186,7 @@ public class VueControleur extends JFrame implements Observer {
 
                 tabIP[x][y].setFront(null);
 
+                tabIP[x][y].setShape(null);
 
 
                 Case c = plateau.getCases()[x][y];
@@ -191,7 +196,7 @@ public class VueControleur extends JFrame implements Observer {
                 if (m != null) {
 
                     if (m instanceof Tapis) {
-                        tabIP[x][y].setBackground(icoTapisDroite);
+                        tabIP[x][y].setBackground(icoTapisDroit);
                     } else if (m instanceof Poubelle) {
                         tabIP[x][y].setBackground(icoPoubelle);
                     } else if (m instanceof Mine) {
@@ -209,6 +214,9 @@ public class VueControleur extends JFrame implements Observer {
 
                     if (current instanceof ItemShape) {
                         tabIP[x][y].setShape((ItemShape) current);
+                        //System.out.println("je met cette item" + current);
+                        //tabIP[x][y].setFront((ItemShape) current);
+
                     }
                     if (current instanceof ItemColor) {
                         // tabIP[x][y].setFront(); TODO : placer l'icone des couleurs approprié

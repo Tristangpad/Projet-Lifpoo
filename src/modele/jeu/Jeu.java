@@ -7,6 +7,14 @@ public class Jeu extends Thread{
     private Plateau plateau;
     private Machine machineChoisie = new Tapis();//utilisation d'un supplier ?
 
+    //definition des variables pour les niveaux
+    private int numeroNiveau = 0;
+    private Niveau niveauActuel;
+    private static final Niveau[] NIVEAU = {
+            new Niveau("CrCrCrCr", 5),
+            new Niveau("CrCr---", 10),
+    };
+
     public Jeu() {
         plateau = new Plateau();
 
@@ -29,6 +37,8 @@ public class Jeu extends Thread{
         chargerNiveau(numeroNiveau);
         plateau.setMachine(10, 10, new Mine());
 
+
+
         start();
 
     }
@@ -42,8 +52,16 @@ public class Jeu extends Thread{
     }
 
     public void press(int x, int y) {
-        if (machineChoisie instanceof Tapis)
-        { plateau.setMachine(x, y, new Tapis()); }
+        Case caseCible = plateau.getCases()[x][y];
+        Machine machineEnPlace = caseCible.getMachine();
+        if (machineChoisie instanceof Tapis) {
+            if(machineEnPlace instanceof Tapis){
+                machineEnPlace.rotate90();
+                System.out.println(machineEnPlace.getDirection());
+            }
+            else { plateau.setMachine(x, y, new Tapis()); }
+
+        }
         else if (machineChoisie instanceof Mine)
         { plateau.setMachine(x, y, new Mine()); }
         else if (machineChoisie instanceof Poubelle)
