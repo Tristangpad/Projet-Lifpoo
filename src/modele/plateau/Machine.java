@@ -50,7 +50,7 @@ public class Machine implements Runnable {
 
     public void work() {
         if (current.size() > 0) {
-            ((ItemShape) current.get(0)).rotate();
+            //((ItemShape) current.get(0)).rotate();
 
         }
     }; // action de la machine, aucune par défaut

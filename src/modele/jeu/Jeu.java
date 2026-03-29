@@ -10,12 +10,25 @@ public class Jeu extends Thread{
     public Jeu() {
         plateau = new Plateau();
 
+        plateau.transformeCaseEnGisement(5,10, new ItemShape("Cr----Cr"));
+
+        plateau.transformeCaseEnGisement(3,10, new ItemShape("CrCrCrCr"));
+        plateau.transformeCaseEnGisement(3,3, new ItemShape("CrCrCbCr"));
+
+        plateau.transformeCaseEnGisement(3,10, new ItemShape("CbCbCbCb"));
+        plateau.transformeCaseEnGisement(10,10, new ItemShape("CrCrCrCr"));
+
+
         plateau.setMachine(5, 10, new Mine());
         plateau.setMachine(5, 5, new Poubelle());
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
 
         plateau.transformeCaseEnGisement(2,2, new ItemShape("CrCr--Cr"));
+
+        chargerNiveau(numeroNiveau);
+        plateau.setMachine(10, 10, new Mine());
+
         start();
 
     }
@@ -40,8 +53,38 @@ public class Jeu extends Thread{
     }
 
     public void slide(int x, int y) {
-        plateau.setMachine(x, y, machineChoisie);
+        if (machineChoisie instanceof Tapis)
+        { plateau.setMachine(x, y, new Tapis()); }
+        else if (machineChoisie instanceof Mine)
+        { plateau.setMachine(x, y, new Mine()); }
+        else if (machineChoisie instanceof Poubelle)
+        { plateau.setMachine(x, y, new Poubelle()); }
+        else if (machineChoisie instanceof Cutter)
+        { plateau.setMachine(x, y, new Cutter()); }
     }
+
+
+
+    public void chargerNiveau(int num) {
+        niveauActuel = NIVEAU[num];
+        plateau.setMachine(3, 7, new ZoneDepot(niveauActuel));
+    }
+
+    public void niveauSuivant() {
+        if (numeroNiveau < NIVEAU.length - 1) {
+            numeroNiveau++;
+            niveauActuel = NIVEAU[numeroNiveau];
+            plateau.setNiveauActuel(niveauActuel);
+        }
+    }
+
+    public Plateau getPlateau() {
+        return plateau;
+    }
+
+    public int getNumeroNiveau() {return numeroNiveau;}
+
+    public Niveau getNiveauActuel() { return niveauActuel; }
 
     public void run() {
         jouerPartie();
@@ -52,6 +95,9 @@ public class Jeu extends Thread{
         while(true) {
             try {
                 plateau.run();
+                if (niveauActuel != null && niveauActuel.niveauFinis()) {
+                    niveauSuivant();
+                }
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
