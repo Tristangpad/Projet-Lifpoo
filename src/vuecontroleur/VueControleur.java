@@ -76,7 +76,14 @@ public class VueControleur extends JFrame implements Observer {
         icoZoneDepot = new ImageIcon("./data/sprites/buildings/hub.png").getImage();
     }
 
-
+    private Image getIconeMachine(Machine m) {
+        if (m instanceof Tapis)     return icoTapisDroite;
+        if (m instanceof Mine)      return icoMine;
+        if (m instanceof Poubelle)  return icoPoubelle;
+        if (m instanceof Cutter)    return icoCutter;
+        if (m instanceof ZoneDepot) return icoZoneDepot;
+        return null;
+    }
 
     private void placerLesComposantsGraphiques() {
         setTitle("ShapeCraft");
@@ -135,9 +142,14 @@ public class VueControleur extends JFrame implements Observer {
                 iP.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        mousePressed = false;
-                        jeu.press(xx, yy);
-                        System.out.println(xx + "-" + yy);
+                        if (e.getButton() == MouseEvent.BUTTON3) {
+                            jeu.suppMachineJeu(xx,yy);
+                        }
+                        else {
+                            mousePressed = false;
+                            jeu.press(xx, yy);
+                            System.out.println(xx + "-" + yy);
+                        }
                     }
 
                     @Override
@@ -177,43 +189,51 @@ public class VueControleur extends JFrame implements Observer {
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-
                 tabIP[x][y].setBackground((Image) null);
-
                 tabIP[x][y].setFront(null);
+                tabIP[x][y].resetPartie();
+            }
+        }
 
-
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
 
                 Case c = plateau.getCases()[x][y];
-
                 Machine m = c.getMachine();
+
+                if (c.isExtention()){
+                    continue;
+                }
 
                 if (m != null) {
 
-                    if (m instanceof Tapis) {
-                        tabIP[x][y].setBackground(icoTapisDroite);
-                    } else if (m instanceof Poubelle) {
-                        tabIP[x][y].setBackground(icoPoubelle);
-                    } else if (m instanceof Mine) {
-                        tabIP[x][y].setBackground(icoMine);
-                    } else if (m instanceof Cutter) {
-                        tabIP[x][y].setBackground(icoCutter);
-                    } else if (m instanceof ZoneDepot) {
-                        tabIP[x][y].setBackground(icoZoneDepot);
+                    Image ico = getIconeMachine(m);
+
+                    if(m.getLargeur() > 1 || m.getHauteur() > 1)
+                    {
+                        for(int xx = 0;xx < m.getLargeur();xx++) {
+                            for (int yy = 0; yy < m.getHauteur(); yy++) {
+                                if (x + xx < sizeX && y + yy < sizeY) {
+                                    tabIP[x + xx][y + yy].setPartie(xx, m.getLargeur(), yy, m.getHauteur());
+                                    tabIP[x + xx][y + yy].setBackground(ico);
+                                }
+                            }
+                        }
+                    }else {
+                        tabIP[x][y].setBackground(ico);
                     }
-
-
-
 
                     Item current = m.getCurrent();
 
                     if (current instanceof ItemShape) {
                         tabIP[x][y].setShape((ItemShape) current);
+                    } else {
+                        tabIP[x][y].supprimeShape();
                     }
+
                     if (current instanceof ItemColor) {
                         // tabIP[x][y].setFront(); TODO : placer l'icone des couleurs approprié
                     }
-
 
 
                 }
@@ -226,11 +246,10 @@ public class VueControleur extends JFrame implements Observer {
 
                 Niveau n = jeu.getNiveauActuel();
                 if (n != null) {
-                    int progression = n.getProgression() * 100/n.getObjectif();
+                    int progression = n.getProgression() * 100 / n.getObjectif();
                     barProgression.setValue(progression);
-                    barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1) +" — "+ progression +"%" + " | Objectif : "+ n.getObjectif());
+                    barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1) + " — " + progression + "%" + " | Objectif : " + n.getObjectif());
                 }
-
 
 
 

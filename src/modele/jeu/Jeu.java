@@ -61,6 +61,9 @@ public class Jeu extends Thread{
     }
 
 
+    public void suppMachineJeu(int x, int y){
+        plateau.suppMachinePlateau(x,y);
+    }
 
     public void chargerNiveau(int num) {
         niveauActuel = NIVEAU[num];

@@ -8,8 +8,6 @@ package modele.plateau;
 
 
 import modele.item.Item;
-import modele.item.ItemShape;
-import modele.plateau.Niveau;
 
 import java.util.HashMap;
 import java.util.Observable;
@@ -55,8 +53,42 @@ public class Plateau extends Observable implements Runnable {
     }
 
     public void setMachine(int x, int y, Machine m) {
+
         if( m instanceof Mine && (grilleCases[x][y].getGisement() == null) ) return;
+
+        for (int xx = 0; xx < m.getLargeur(); xx++) {
+            for (int yy = 0; yy < m.getHauteur(); yy++) {
+                Case c = grilleCases[x+ xx][y + yy];
+                if(c.getMachine() != null || c.isExtention())
+                    {return;}//ne set pas de machine si case obstruer par une autre machine
+            }
+
+        }
         grilleCases[x][y].setMachine(m);
+
+        //extention si machine dim > 2
+        for (int xx = 0; xx < m.getLargeur(); xx++) {
+            for (int yy = 0; yy < m.getHauteur(); yy++) {
+                if (xx == 0 && yy == 0){
+                    continue;
+                }
+                grilleCases[x + xx][y + yy].setMachinePrincipale(grilleCases[x][y]); //place les autre case en fonction de la case principale
+            }
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    public void suppMachinePlateau(int x, int y){
+
+        Machine m = grilleCases[x][y].getMachine();
+
+        for (int dx = 0; dx < m.getLargeur(); dx++) {
+            for (int dy = 0; dy < m.getHauteur(); dy++) {
+                grilleCases[x + dx][y + dy].suppMachineCase();
+                grilleCases[x + dx][y + dy].suppMachinePrincipale();
+            }
+        }
         setChanged();
         notifyObservers();
     }

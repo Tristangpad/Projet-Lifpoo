@@ -2,15 +2,17 @@ package modele.plateau;
 
 import modele.item.Item;
 import modele.item.ItemShape;
-
+import modele.plateau.Point;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Machine implements Runnable {
     LinkedList<Item> current;
-
     Case c;
     Direction d = Direction.North; // par défaut, pour commencer, tout est orienté au north
+
+    protected Point dimension = new Point(1,1);
+
 
     public Machine()
     {
@@ -48,12 +50,17 @@ public class Machine implements Runnable {
         }
     }
 
-    public void work() {
-        if (current.size() > 0) {
-            ((ItemShape) current.get(0)).rotate();
+    public int getLargeur() {
+        return dimension.x;
+    }
 
-        }
+    public int getHauteur() {
+        return dimension.y;
+    }
+
+    public void work() {
     }; // action de la machine, aucune par défaut
+
 
     @Override
     public void run() {

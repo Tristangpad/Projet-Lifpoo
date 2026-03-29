@@ -11,9 +11,33 @@ public class ImagePanel extends JPanel {
     private Image imgFront;
     private ItemShape shape;
 
+    //dimentions par defauts d'une machine
+    private int dimentionPartX = 0;
+    private int dimentionPartY = 0;
+    private int dimentionTotalX = 1;
+    private int dimentionTotalY = 1;
+
+    public void setPartie(int partX, int totalX,int partY, int totalY) {
+        this.dimentionPartX = partX;
+        this.dimentionTotalX = totalX;
+        this.dimentionPartY = partY;
+        this.dimentionTotalY = totalY;
+    }
+
+    public void resetPartie() {
+        this.dimentionPartX = 0;
+        this.dimentionTotalX = 1;
+        this.dimentionPartY = 0;
+        this.dimentionTotalY = 1;
+    }
+
 
     public void setShape(ItemShape _shape) {
         shape = _shape;
+    }
+
+    public void supprimeShape() {
+        this.shape = null;
     }
 
     public void setBackground(Image _imgBackground) {
@@ -47,14 +71,23 @@ public class ImagePanel extends JPanel {
 
 
         if (imgBackground != null) {
+            if(dimentionTotalX == 1 && dimentionTotalY == 1) {
+                g.drawImage(imgBackground, xBack, yBack, widthBack, heigthBack, this);
+            }else {
+                int largeurP = imgBackground.getWidth(null)/dimentionTotalX;
+                int hauteurP = imgBackground.getHeight(null)/dimentionTotalY; //image deja charger donc ont met null a lieu de this (sensé avertir le panel)
 
-            g.drawImage(imgBackground, xBack, yBack, widthBack, heigthBack, this);
+                g.drawImage(imgBackground,
+                        xBack, yBack, xBack + widthBack, yBack + heigthBack,
+                        dimentionPartX*largeurP,dimentionPartY*hauteurP,
+                        (dimentionPartX + 1) * largeurP,(dimentionPartY + 1) * hauteurP,
+                        this);
+            }
         }
 
         if (imgFront != null) {
             g.drawImage(imgFront, xFront, yFront, widthFront, heigthFront, this);
         }
-
 
         if (shape != null) {
 
