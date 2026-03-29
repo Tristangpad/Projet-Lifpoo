@@ -36,8 +36,10 @@ public class Plateau extends Observable implements Runnable {
 
         Point p = map.get(source);
         return caseALaPosition(new Point(p.x+d.dx, p.y+d.dy));
+    }
 
-
+    public Case getCase(int x, int y) {
+        return  grilleCases[x][y];
     }
 
     private void initPlateauVide() {
