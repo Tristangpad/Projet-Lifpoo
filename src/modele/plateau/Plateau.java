@@ -33,7 +33,6 @@ public class Plateau extends Observable implements Runnable {
     }
 
     public Case getCase(Case source, Direction d) {
-
         Point p = map.get(source);
         return caseALaPosition(new Point(p.x+d.dx, p.y+d.dy));
     }
@@ -94,7 +93,15 @@ public class Plateau extends Observable implements Runnable {
         setChanged();
         notifyObservers();
     }
+    public void changerDirMachine(int x, int y) {
+        Machine m = grilleCases[x][y].getMachine();
 
+        if (m instanceof Tapis tapis) {
+            tapis.tourner();
+        }
+        setChanged();
+        notifyObservers();
+    }
     /**
      * transforme une case en gisement
      */

@@ -14,6 +14,7 @@ public class Jeu extends Thread{
     private static final Niveau[] NIVEAU = {
             new Niveau("CrCrCrCr", 5),
             new Niveau("CrCr---", 10),
+            new Niveau("------Cr", 20),
     };
 
     public Jeu() {
@@ -27,6 +28,7 @@ public class Jeu extends Thread{
         plateau.setMachine(5, 5, new Poubelle());
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
+        plateau.setMachine(3, 8, new Rotater());
 
         chargerNiveau(numeroNiveau);
 
@@ -39,14 +41,19 @@ public class Jeu extends Thread{
     }
 
     public void press(int x, int y) {
+        Case caseCible = plateau.getCases()[x][y];
+        Machine machineEnPlace = caseCible.getMachine();
+
         if (machineChoisie instanceof Tapis)
-        { plateau.setMachine(x, y, new Tapis()); }
+        { plateau.setMachine(x, y, new Tapis());}
         else if (machineChoisie instanceof Mine)
         { plateau.setMachine(x, y, new Mine()); }
         else if (machineChoisie instanceof Poubelle)
         { plateau.setMachine(x, y, new Poubelle()); }
         else if (machineChoisie instanceof Cutter)
         { plateau.setMachine(x, y, new Cutter()); }
+        else if (machineChoisie instanceof Rotater)
+        { plateau.setMachine(x, y, new Rotater()); }
     }
 
     public void slide(int x, int y) {
@@ -58,6 +65,12 @@ public class Jeu extends Thread{
         { plateau.setMachine(x, y, new Poubelle()); }
         else if (machineChoisie instanceof Cutter)
         { plateau.setMachine(x, y, new Cutter()); }
+        else if (machineChoisie instanceof Rotater)
+        { plateau.setMachine(x, y, new Rotater()); }
+    }
+
+    public void rotateM(int x, int y) {
+        plateau.changerDirMachine(x,y);
     }
 
 

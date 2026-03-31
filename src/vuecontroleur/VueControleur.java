@@ -7,6 +7,10 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+
 import vuecontroleur.Menu;
 import modele.item.Item;
 import modele.item.ItemColor;
@@ -31,14 +35,20 @@ public class VueControleur extends JFrame implements Observer {
     private JFrame frame;
     private Menu menu;
 
+    private double rotationAngle = Math.toRadians(90);
 
     // icones affichées dans la grille
-    private Image icoRouge;
+    private Image icoTapisHaut;
+    private Image icoTapisBas;
+    private Image icoTapisGauche;
     private Image icoTapisDroite;
+
+    private Image icoRouge;
     private Image icoPoubelle;
     private Image icoMine;
     private Image icoCutter;
     private Image icoZoneDepot;
+    private Image icoRotater;
 
     private JComponent grilleIP;
     private boolean mousePressed = false; // permet de mémoriser l'état de la souris
@@ -61,25 +71,56 @@ public class VueControleur extends JFrame implements Observer {
         plateau.addObserver(this);
 
         mettreAJourAffichage();
+    }
 
+    public static Image rotateIcon(Image img, double angle) {
+        //trouver sur internet
+        int w = img.getWidth(null);
+        int h = img.getHeight(null);
+
+        BufferedImage rotated = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D imageR = rotated.createGraphics();
+
+        imageR.rotate(Math.toRadians(angle), w / 2.0, h / 2.0);
+        imageR.drawImage(img, 0, 0, null);
+
+        imageR.dispose();
+
+        return rotated;
     }
 
 
     private void chargerLesIcones() {
 
-        icoRouge = new ImageIcon("./data/sprites/colors/blue.png").getImage();
-        icoTapisDroite = new ImageIcon("./data/sprites/buildings/belt_top.png").getImage();
+        icoTapisHaut = new ImageIcon("./data/sprites/buildings/belt_top.png").getImage();
+        icoTapisBas = rotateIcon(icoTapisHaut,180);
+        icoTapisGauche = rotateIcon(icoTapisHaut,270);
+        icoTapisDroite = rotateIcon(icoTapisHaut,90);
 
+        icoRouge = new ImageIcon("./data/sprites/colors/blue.png").getImage();
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
         icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
+        icoRotater = new ImageIcon("./data/sprites/buildings/rotater.png").getImage();
+
+        //machine avec extention
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
         icoZoneDepot = new ImageIcon("./data/sprites/buildings/hub.png").getImage();
+
     }
 
     private Image getIconeMachine(Machine m) {
-        if (m instanceof Tapis)     return icoTapisDroite;
+        if (m instanceof Tapis) {
+            switch (((Tapis) m).getDirection()) {
+                case North -> {return icoTapisHaut;}
+                case South -> {return icoTapisBas;}
+                case West -> {return icoTapisGauche;}
+                case East -> {return icoTapisDroite;}
+            }
+        }
         if (m instanceof Mine)      return icoMine;
         if (m instanceof Poubelle)  return icoPoubelle;
+        if (m instanceof Rotater)   return icoRotater;
+
         if (m instanceof Cutter)    return icoCutter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
         return null;
@@ -100,20 +141,19 @@ public class VueControleur extends JFrame implements Observer {
         grilleIP = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
         tabIP = new ImagePanel[sizeX][sizeY];
 
-
-
         //mise en forme du menue de choix de machine
         contrainteMenu = new GridBagConstraints();
         contrainteMenu.anchor = GridBagConstraints.SOUTH;
         contrainteMenu.weighty = 1.0;
         contrainteMenu.fill = GridBagConstraints.HORIZONTAL;
-        contrainteMenu.ipadx = 20;
-        contrainteMenu.ipady = 20;
+        contrainteMenu.ipadx = 10;
+        contrainteMenu.ipady = 10;
+        contrainteMenu.insets = new Insets(0, 0, 50, 0);
 
         //mise en forme de la bar de progression des niveaux
         barProgression.setStringPainted(true);
-        barProgression.setPreferredSize(new Dimension(sizeX * pxCase, 30)); //de Claude ca
-        add(barProgression, BorderLayout.NORTH); //ca aussi
+        barProgression.setPreferredSize(new Dimension(sizeX * pxCase, 30));
+        add(barProgression, BorderLayout.NORTH);
 
 
         //ajout du menue avec sa mise en forme a l'overlay générale du jeux qui permet une superposition entre les 2
@@ -124,6 +164,8 @@ public class VueControleur extends JFrame implements Observer {
         menu.getBTapis().addActionListener(e -> jeu.setMachineChoisie(new Tapis()));
         menu.getBMine().addActionListener(e -> jeu.setMachineChoisie(new Mine()));
         menu.getBPoubelle().addActionListener(e -> jeu.setMachineChoisie(new Poubelle()));
+        menu.getBRotater().addActionListener(e -> jeu.setMachineChoisie(new Rotater()));
+
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
 
 
@@ -162,6 +204,8 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         mousePressed = true;
+
+                        jeu.rotateM(xx,yy);
                         jeu.press(xx, yy);
                     }
 
@@ -191,6 +235,7 @@ public class VueControleur extends JFrame implements Observer {
             for (int y = 0; y < sizeY; y++) {
                 tabIP[x][y].setBackground((Image) null);
                 tabIP[x][y].setFront(null);
+                tabIP[x][y].setShape(null);
                 tabIP[x][y].resetPartie();
             }
         }
@@ -220,6 +265,10 @@ public class VueControleur extends JFrame implements Observer {
                             }
                         }
                     }else {
+                        if(m instanceof Tapis tapis)
+                        {
+                            tapis.getDirection();
+                        }
                         tabIP[x][y].setBackground(ico);
                     }
 

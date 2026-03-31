@@ -66,8 +66,6 @@ public class Machine implements Runnable {
     public void run() {
         work();
         send();
-
-
     }
 
 

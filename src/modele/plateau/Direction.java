@@ -9,4 +9,14 @@ public enum Direction {
         dx = _dx;
         dy = _dy;
     }
+
+    public Direction suivante() {
+        return switch(this) {
+            case North -> West;
+            case  West-> South;
+            case South -> East;
+            case East -> North;
+        };
+    }
+
 }
