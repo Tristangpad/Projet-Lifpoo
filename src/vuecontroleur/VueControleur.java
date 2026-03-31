@@ -50,6 +50,17 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoZoneDepot;
     private Image icoRotater;
 
+    private Image icoTapisHautDroite;
+    private Image icoTapisBasDroite;
+    private Image icoTapisHautGauche;
+    private Image icoTapisBasGauche;
+
+    private Image icoTapisDroiteHaut;
+    private Image icoTapisDroiteBas;
+    private Image icoTapisGaucheHaut;
+    private Image icoTapisGaucheBas;
+
+
     private JComponent grilleIP;
     private boolean mousePressed = false; // permet de mémoriser l'état de la souris
     private ImagePanel[][] tabIP; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône background et front, suivant ce qui est présent dans le modèle)
@@ -57,6 +68,8 @@ public class VueControleur extends JFrame implements Observer {
     private JPanel menuOverlay;
     private GridBagConstraints contrainteMenu;
 
+    private int casePX = -1; //par defaut
+    private int casePY = -1;
 
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
@@ -97,6 +110,16 @@ public class VueControleur extends JFrame implements Observer {
         icoTapisGauche = rotateIcon(icoTapisHaut,270);
         icoTapisDroite = rotateIcon(icoTapisHaut,90);
 
+        icoTapisHautDroite = new ImageIcon("./data/sprites/buildings/belt_right.png").getImage();
+        icoTapisHautGauche = new ImageIcon("./data/sprites/buildings/belt_left.png").getImage();
+        icoTapisBasDroite = rotateIcon(icoTapisHautGauche,180);
+        icoTapisBasGauche = rotateIcon(icoTapisHautDroite,180);
+
+        icoTapisDroiteHaut = rotateIcon(icoTapisHautGauche,90);
+        icoTapisDroiteBas  = rotateIcon(icoTapisHautDroite,90);
+        icoTapisGaucheHaut  = rotateIcon(icoTapisHautDroite,270);
+        icoTapisGaucheBas = rotateIcon(icoTapisHautGauche,270);
+
         icoRouge = new ImageIcon("./data/sprites/colors/blue.png").getImage();
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
         icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
@@ -110,11 +133,49 @@ public class VueControleur extends JFrame implements Observer {
 
     private Image getIconeMachine(Machine m) {
         if (m instanceof Tapis) {
-            switch (((Tapis) m).getDirection()) {
-                case North -> {return icoTapisHaut;}
-                case South -> {return icoTapisBas;}
-                case West -> {return icoTapisGauche;}
-                case East -> {return icoTapisDroite;}
+            Direction sortie = ((Tapis) m).getDirection();
+            Direction entree = ((Tapis) m).getDirInput();
+
+            //System.out.println(entree + "--->" + sortie); //debug
+            if (entree == null || entree == sortie) {
+
+                switch (sortie) {
+                    case North -> {
+                        return icoTapisHaut;
+                    }
+                    case South -> {
+                        return icoTapisBas;
+                    }
+                    case West -> {
+                        return icoTapisGauche;
+                    }
+                    case East -> {
+                        return icoTapisDroite;
+                    }
+                }
+            }
+
+            switch (entree) {
+                case North -> {switch (sortie) {
+                                case East  -> {return icoTapisHautDroite;}
+                                case West  -> {return icoTapisHautGauche;}
+                                default    -> {return icoTapisHaut;}}
+                }
+                case South -> {switch (sortie) {
+                                case East  -> {return icoTapisBasDroite;}
+                                case West  -> {return icoTapisBasGauche;}
+                                default    -> {return icoTapisBas;}}
+                }
+                case East -> {switch (sortie) {
+                                case North -> {return icoTapisDroiteHaut;}
+                                case South -> {return icoTapisDroiteBas;}
+                                default    -> {return icoTapisDroite;}}
+                }
+                case West -> {switch (sortie) {
+                                case North -> {return icoTapisGaucheHaut;}
+                                case South -> {return icoTapisGaucheBas;}
+                                default    -> {return icoTapisGauche;}}
+                }
             }
         }
         if (m instanceof Mine)      return icoMine;
@@ -186,6 +247,7 @@ public class VueControleur extends JFrame implements Observer {
                     public void mouseClicked(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON3) {
                             jeu.suppMachineJeu(xx,yy);
+
                         }
                         else {
                             mousePressed = false;
@@ -197,6 +259,14 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         if (mousePressed) {
+
+                            if(casePX != -1 && casePY != -1) {
+                                System.out.println("dir changer");
+                                Direction dir = jeu.calculLiaisonTapis(casePX,casePY,xx,yy);
+                                jeu.setDirectionMachine(dir);
+                            }
+                            casePX = xx;
+                            casePY = yy;
                             jeu.slide(xx, yy);
                         }
                     }
@@ -212,7 +282,8 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         mousePressed = false;
-
+                        casePX = -1; //la case precedente ne compte plus tant que ce n'est pas pour slide
+                        casePY = -1;
                     }
                 });
 
@@ -267,7 +338,7 @@ public class VueControleur extends JFrame implements Observer {
                     }else {
                         if(m instanceof Tapis tapis)
                         {
-                            tapis.getDirection();
+                            tapis.setDirection(tapis.getDirection());
                         }
                         tabIP[x][y].setBackground(ico);
                     }

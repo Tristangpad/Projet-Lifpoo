@@ -11,8 +11,7 @@ public class Machine implements Runnable {
     Case c;
     Direction d = Direction.North; // par défaut, pour commencer, tout est orienté au north
 
-    protected Point dimension = new Point(1,1);
-
+    protected Point dimension = new Point(1,1);//taille par default d'une machine
 
     public Machine()
     {
@@ -27,6 +26,8 @@ public class Machine implements Runnable {
     public void setCase(Case _c) {
         c= _c;
     }
+
+    public void setDirection(Direction dir) {this.d = dir;}
 
     public Item getCurrent() {
         if (current.size() > 0) {

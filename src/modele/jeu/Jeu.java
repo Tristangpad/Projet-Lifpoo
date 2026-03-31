@@ -7,6 +7,10 @@ import modele.item.ItemShape;
 public class Jeu extends Thread{
     private Plateau plateau;
     private Machine machineChoisie = new Tapis();//utilisation d'un supplier ?
+    private Direction directionMachine = Direction.North;
+
+    private int dernierClickX = -1;
+    private int dernierClickY = -1;
 
     //definition des variables pour les niveaux
     private int numeroNiveau = 0;
@@ -28,7 +32,6 @@ public class Jeu extends Thread{
         plateau.setMachine(5, 5, new Poubelle());
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
-        plateau.setMachine(3, 8, new Rotater());
 
         chargerNiveau(numeroNiveau);
 
@@ -41,9 +44,6 @@ public class Jeu extends Thread{
     }
 
     public void press(int x, int y) {
-        Case caseCible = plateau.getCases()[x][y];
-        Machine machineEnPlace = caseCible.getMachine();
-
         if (machineChoisie instanceof Tapis)
         { plateau.setMachine(x, y, new Tapis());}
         else if (machineChoisie instanceof Mine)
@@ -57,8 +57,23 @@ public class Jeu extends Thread{
     }
 
     public void slide(int x, int y) {
-        if (machineChoisie instanceof Tapis)
-        { plateau.setMachine(x, y, new Tapis()); }
+        if (machineChoisie instanceof Tapis) {
+            if(dernierClickX != -1 && dernierClickY != -1) {
+                Machine tapisInput = plateau.getCase(dernierClickX, dernierClickY).getMachine();
+                if (tapisInput instanceof Tapis) {
+                    ((Tapis) tapisInput).setDirection(directionMachine);
+                }
+            }
+            Tapis t = new Tapis();
+            t.setDirection(directionMachine);
+            if(dernierClickX != -1 && dernierClickY != -1){
+                t.setDirInput(calculLiaisonTapis(dernierClickX,dernierClickY,x,y));
+            }
+            plateau.setMachine(x, y, t);
+
+            dernierClickX = x;
+            dernierClickY = y;
+        }
         else if (machineChoisie instanceof Mine)
         { plateau.setMachine(x, y, new Mine()); }
         else if (machineChoisie instanceof Poubelle)
@@ -67,6 +82,24 @@ public class Jeu extends Thread{
         { plateau.setMachine(x, y, new Cutter()); }
         else if (machineChoisie instanceof Rotater)
         { plateau.setMachine(x, y, new Rotater()); }
+    }
+
+    public Direction calculLiaisonTapis(int x1, int y1,int x2, int y2) {
+        int calcXD = x2-x1;
+        int calcYD = y2-y1;
+        switch (calcXD+ "," + calcYD)
+        {
+            case "0,-1" -> {return Direction.North;}
+            case "0,1"  -> {return Direction.South;}
+            case "1,0"  -> {return Direction.East;}
+            case "-1,0" -> {return Direction.West;}
+
+            default     -> {return Direction.North;}
+        }
+    }
+
+    public void setDirectionMachine(Direction d) {
+        directionMachine = d;
     }
 
     public void rotateM(int x, int y) {
@@ -80,7 +113,7 @@ public class Jeu extends Thread{
 
     public void chargerNiveau(int num) {
         niveauActuel = NIVEAU[num];
-        plateau.setMachine(3, 7, new ZoneDepot(niveauActuel));
+        plateau.setMachine(9, 6, new ZoneDepot(niveauActuel));
     }
 
     public void niveauSuivant() {

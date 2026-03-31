@@ -69,8 +69,8 @@ public class ItemShape extends Item {
 
     public ItemShape[] couper(){
 
-        String moitierGauche = ""+ adapterShape(tabSubShapes[0]) + adapterCouleur(tabColors[0]) + "--" + adapterShape(tabSubShapes[2]) + adapterCouleur(tabColors[2]) + "--";
-        String moitierDroite = "--" + adapterShape(tabSubShapes[1]) + adapterCouleur(tabColors[1]) + "--" + adapterShape(tabSubShapes[3]) + adapterCouleur(tabColors[3]) + "";
+        String moitierDroite = ""+ adapterShape(tabSubShapes[0]) + adapterCouleur(tabColors[0]) + adapterShape(tabSubShapes[2]) + adapterCouleur(tabColors[2]) + "--"  + "--";
+        String moitierGauche = "--" + "--" + adapterShape(tabSubShapes[1]) + adapterCouleur(tabColors[1]) + adapterShape(tabSubShapes[3]) + adapterCouleur(tabColors[3]) + "";
 
         //debug
         System.out.println(moitierGauche);
