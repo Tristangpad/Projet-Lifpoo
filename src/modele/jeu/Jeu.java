@@ -28,7 +28,6 @@ public class Jeu extends Thread{
         plateau.setMachine(5, 5, new Poubelle());
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
-        plateau.setMachine(3, 8, new Rotater());
 
         chargerNiveau(numeroNiveau);
 
@@ -41,9 +40,6 @@ public class Jeu extends Thread{
     }
 
     public void press(int x, int y) {
-        Case caseCible = plateau.getCases()[x][y];
-        Machine machineEnPlace = caseCible.getMachine();
-
         if (machineChoisie instanceof Tapis)
         { plateau.setMachine(x, y, new Tapis());}
         else if (machineChoisie instanceof Mine)
@@ -80,7 +76,7 @@ public class Jeu extends Thread{
 
     public void chargerNiveau(int num) {
         niveauActuel = NIVEAU[num];
-        plateau.setMachine(3, 7, new ZoneDepot(niveauActuel));
+        plateau.setMachine(9, 6, new ZoneDepot(niveauActuel));
     }
 
     public void niveauSuivant() {

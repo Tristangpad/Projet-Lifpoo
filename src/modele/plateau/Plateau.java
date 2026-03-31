@@ -48,9 +48,7 @@ public class Plateau extends Observable implements Runnable {
                 grilleCases[x][y] = new Case(this);
                 map.put(grilleCases[x][y], new Point(x, y));
             }
-
         }
-
     }
 
     public void setMachine(int x, int y, Machine m) {

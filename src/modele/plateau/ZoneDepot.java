@@ -8,12 +8,11 @@ import java.util.Objects;
 
 public class ZoneDepot extends Machine {
 
-
-
     private Niveau niveau;
 
     public ZoneDepot(Niveau n) {
         this.niveau = n;
+        this.dimension = new Point(4, 4);
     }
 
     public void setNiveau(Niveau n) {
