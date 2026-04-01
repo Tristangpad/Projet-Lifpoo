@@ -17,6 +17,8 @@ public class Niveau {
         this.progression = 0;
     }
 
+    public String getFormeDemander() {return formeDemander;}
+
     public boolean verifierItem(ItemShape item) {
         return Objects.equals(item.getConfigItem(), formeDemander);
     }

@@ -139,8 +139,9 @@ public class Plateau extends Observable implements Runnable {
             }
         }
         setChanged();
-        notifyObservers();
+        notifyObservers(n);
     }
+
 
     @Override
     public void run() {

@@ -17,7 +17,7 @@ public class Jeu extends Thread{
     private Niveau niveauActuel;
     private static final Niveau[] NIVEAU = {
             new Niveau("CrCrCrCr", 5),
-            new Niveau("CrCr---", 10),
+            new Niveau("CrCr----", 10),
             new Niveau("------Cr", 20),
     };
 

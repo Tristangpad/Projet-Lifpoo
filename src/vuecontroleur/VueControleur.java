@@ -67,6 +67,8 @@ public class VueControleur extends JFrame implements Observer {
 
     private JPanel menuOverlay;
     private GridBagConstraints contrainteMenu;
+    private JPanel introNiveau;
+    private GridBagConstraints contrainteNiveau;
 
     private int casePX = -1; //par defaut
     private int casePY = -1;
@@ -80,8 +82,10 @@ public class VueControleur extends JFrame implements Observer {
 
         chargerLesIcones();
         placerLesComposantsGraphiques();
+        afficherIntroNiveau(jeu.getNiveauActuel(), jeu.getNumeroNiveau());
 
         plateau.addObserver(this);
+
 
         mettreAJourAffichage();
     }
@@ -185,6 +189,24 @@ public class VueControleur extends JFrame implements Observer {
         if (m instanceof Cutter)    return icoCutter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
         return null;
+    }
+
+    public void afficherIntroNiveau(Niveau n,int numNiveau) {
+        if(introNiveau != null){
+            menuOverlay.remove(introNiveau);
+        }
+        introNiveau = new NiveauAfficher(n,numNiveau);
+
+        contrainteNiveau = new GridBagConstraints();
+        contrainteNiveau.gridx = 0;
+        contrainteNiveau.gridy = 0;
+        contrainteNiveau.weightx = 1;
+        contrainteNiveau.weighty = 1;
+        contrainteNiveau.fill = GridBagConstraints.BOTH;
+
+        menuOverlay.add(introNiveau, contrainteNiveau);
+        menuOverlay.revalidate();
+        menuOverlay.repaint();
     }
 
     private void placerLesComposantsGraphiques() {
@@ -387,8 +409,12 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void run() {
                         mettreAJourAffichage();
+                        if (arg instanceof Niveau n) {
+                            afficherIntroNiveau(n, jeu.getNumeroNiveau());
+                        }
                     }
-                }); 
+                });
+
 
     }
 }
