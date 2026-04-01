@@ -45,10 +45,19 @@ public class VueControleur extends JFrame implements Observer {
 
     private Image icoRouge;
     private Image icoPoubelle;
-    private Image icoMine;
+
+    private Image icoMineHaut;
+    private Image icoMineBas;
+    private Image icoMineGauche;
+    private Image icoMineDroite;
+
     private Image icoCutter;
     private Image icoZoneDepot;
-    private Image icoRotater;
+
+    private Image icoRotaterHaut;
+    private Image icoRotaterBas;
+    private Image icoRotaterGauche;
+    private Image icoRotaterDroite;
 
     private Image icoTapisHautDroite;
     private Image icoTapisBasDroite;
@@ -126,8 +135,16 @@ public class VueControleur extends JFrame implements Observer {
 
         icoRouge = new ImageIcon("./data/sprites/colors/blue.png").getImage();
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
-        icoMine = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
-        icoRotater = new ImageIcon("./data/sprites/buildings/rotater.png").getImage();
+
+        icoMineHaut = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
+        icoMineBas = rotateIcon(icoMineHaut,180);
+        icoMineGauche = rotateIcon(icoMineHaut,270);
+        icoMineDroite = rotateIcon(icoMineHaut,90);
+
+        icoRotaterHaut = new ImageIcon("./data/sprites/buildings/rotater.png").getImage();
+        icoRotaterBas = rotateIcon(icoRotaterHaut,180);
+        icoRotaterGauche = rotateIcon(icoRotaterHaut,270);
+        icoRotaterDroite = rotateIcon(icoRotaterBas,90);
 
         //machine avec extention
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
@@ -182,9 +199,22 @@ public class VueControleur extends JFrame implements Observer {
                 }
             }
         }
-        if (m instanceof Mine)      return icoMine;
+        if (m instanceof Mine)
+            switch (((Mine) m).getDirection()) {
+                case North -> {return icoMineHaut;}
+                case South -> {return icoMineBas;}
+                case West -> {return icoMineGauche;}
+                case East -> {return icoMineDroite;}
+            }
         if (m instanceof Poubelle)  return icoPoubelle;
-        if (m instanceof Rotater)   return icoRotater;
+
+        if (m instanceof Rotater)
+            switch (((Rotater) m).getDirection()) {
+                case North -> {return icoRotaterHaut;}
+                case South -> {return icoRotaterBas;}
+                case West -> {return icoRotaterGauche;}
+                case East -> {return icoRotaterDroite;}
+            }
 
         if (m instanceof Cutter)    return icoCutter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
@@ -265,18 +295,18 @@ public class VueControleur extends JFrame implements Observer {
                 final int yy = y;
                 // écouteur de clics
                 iP.addMouseListener(new MouseAdapter() {
-                    @Override
+                    /*@Override
                     public void mouseClicked(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON3) {
                             jeu.suppMachineJeu(xx,yy);
-
                         }
                         else {
-                            mousePressed = false;
+                            mousePressed = true;
+                            jeu.rotateM(xx,yy);
                             jeu.press(xx, yy);
                             System.out.println(xx + "-" + yy);
                         }
-                    }
+                    }*/
 
                     @Override
                     public void mouseEntered(MouseEvent e) {
@@ -295,10 +325,18 @@ public class VueControleur extends JFrame implements Observer {
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        mousePressed = true;
-
+                        /*mousePressed = true;
                         jeu.rotateM(xx,yy);
-                        jeu.press(xx, yy);
+                        jeu.press(xx, yy);*/
+                        if (e.getButton() == MouseEvent.BUTTON3) {
+                            jeu.suppMachineJeu(xx,yy);
+                        }
+                        else {
+                            mousePressed = true;
+                            jeu.rotateM(xx,yy);
+                            jeu.press(xx, yy);
+                            System.out.println(xx + "-" + yy);
+                        }
                     }
 
                     @Override

@@ -97,6 +97,14 @@ public class Plateau extends Observable implements Runnable {
         if (m instanceof Tapis tapis) {
             tapis.tourner();
         }
+        if (m instanceof Mine mine) {
+            mine.tourner();
+        }
+
+        /*if (m instanceof Rotater rotater)
+            rotater.tourner();
+        }*/
+
         setChanged();
         notifyObservers();
     }

@@ -20,6 +20,7 @@ public class Tapis extends Machine{
     @Override
     public void send() // la machine dépose un item sur sa ou ses sorties
     {
+
         Case destination = c.plateau.getCase(c, d);
         if (destination != null) {
             Machine m = destination.getMachine();

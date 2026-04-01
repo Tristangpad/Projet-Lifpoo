@@ -41,10 +41,9 @@ public class Machine implements Runnable {
 
     public void send() // la machine dépose un item sur sa ou ses sorties
     {
-        Case up = c.plateau.getCase(c, Direction.North);
+        Case up = c.plateau.getCase(c, d);
         if (up != null) {
             Machine m = up.getMachine();
-            ;
             if (m != null && !current.isEmpty()) {
                 Item item = current.getFirst();
                 m.current.add(item);
@@ -52,6 +51,8 @@ public class Machine implements Runnable {
             }
         }
     }
+
+    public Direction getDirection() { return d; }
 
     public int getLargeur() {
         return dimension.x;
@@ -70,7 +71,5 @@ public class Machine implements Runnable {
         work();
         send();
     }
-
-
 
 }

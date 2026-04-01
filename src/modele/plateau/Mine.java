@@ -25,4 +25,10 @@ public class Mine extends Machine {
     public void send() {
         super.send();
     }
+
+
+    public void tourner() {
+        d = d.suivante();
+    }
+
 }

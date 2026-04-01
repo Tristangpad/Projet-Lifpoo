@@ -7,6 +7,10 @@ import java.util.Random;
 
 public class Rotater extends Machine{
 
+    public void tourner() {
+        d = d.suivante();
+    }
+
     @Override
     public void work() {
         if (!current.isEmpty()) {
