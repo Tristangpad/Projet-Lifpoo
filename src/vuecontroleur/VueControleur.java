@@ -320,20 +320,19 @@ public class VueControleur extends JFrame implements Observer {
                             casePX = xx;
                             casePY = yy;
                             jeu.slide(xx, yy);
+                            if (SwingUtilities.isLeftMouseButton(e)) {jeu.slide(xx, yy);}
+                            else if (SwingUtilities.isRightMouseButton(e)) {jeu.suppMachineJeu(xx, yy);}
                         }
                     }
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        /*mousePressed = true;
-                        jeu.rotateM(xx,yy);
-                        jeu.press(xx, yy);*/
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            jeu.suppMachineJeu(xx,yy);
+                        mousePressed = true;
+                        if (SwingUtilities.isRightMouseButton(e)) {
+                            jeu.suppMachineJeu(xx, yy);
                         }
-                        else {
-                            mousePressed = true;
-                            jeu.rotateM(xx,yy);
+                        else if (SwingUtilities.isLeftMouseButton(e)) {
+                            jeu.rotateM(xx, yy);
                             jeu.press(xx, yy);
                             System.out.println(xx + "-" + yy);
                         }
