@@ -27,6 +27,10 @@ public class Jeu extends Thread{
         plateau.transformeCaseEnGisement(5,10, new ItemShape("Cr----Cr"));
         plateau.transformeCaseEnGisement(3,10, new ItemShape("CrCrCrCr"));
         plateau.transformeCaseEnGisement(3,3, new ItemShape("CrCrCbCr"));
+        plateau.transformeCaseEnGisement(5, 3, new ItemShape("RrRrRrRr"));
+        plateau.transformeCaseEnGisement(7, 3, new  ItemShape("RrCrRrCr"));
+        plateau.transformeCaseEnGisement(9, 3, new  ItemShape("RbCrRrCb"));
+
 
         plateau.setMachine(5, 10, new Mine());
         plateau.setMachine(5, 5, new Poubelle());

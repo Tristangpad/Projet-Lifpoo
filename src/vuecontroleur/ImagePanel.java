@@ -105,17 +105,56 @@ public class ImagePanel extends JPanel {
                             case modele.item.Color.Red:
                                 g.setColor(Color.RED);
                                 break;
+                            case modele.item.Color.Green:
+                                g.setColor(Color.GREEN);
+                                break;
                             case modele.item.Color.White:
                                 g.setColor(Color.WHITE);
                                 break;
+                            case modele.item.Color.Cyan:
+                                g.setColor(Color.CYAN);
+                                break;
+                            case modele.item.Color.Blue:
+                                g.setColor(Color.BLUE);
+                                break;
+                            case modele.item.Color.Yellow:
+                                g.setColor(Color.YELLOW);
+                                break;
+                            case modele.item.Color.Purple:
+                                g.setColor(Color.PURPLE);
+
                             // TODO autres couleurs
                         }
 
+                        int gap = 2;
+                        int startAngle = (4 - i) % 4 * 90;
+
+                        int qx = xFront + (widthFront / 2) * ((i >> 1) ^ 1) + gap;
+                        int qy = yFront + (heigthFront / 2) * ((i & 1) ^ ((i >> 1) & 1)) + gap;
+                        int qw = widthFront / 2 - gap * 2;
+                        int qh = heigthFront / 2 - gap * 2;
+
                         switch (ss) {
-                            case SubShape.Carre:
-                                g.fillRect(xFront + (widthFront / 2) * ((i >> 1) ^ 1), yFront + (heigthFront / 2) * ((i & 1) ^ ((i >> 1) & 1)), widthFront / 2, heigthFront / 2);
+                            case SubShape.Circle: {
+                                Color savedColor = g.getColor();
+                                Graphics2D g2 = (Graphics2D) g;
+
+                                Shape oldClip = g2.getClip();
+                                g2.setClip(qx, qy, qw, qh);
+
+                                // Cercle dimensionné avec gap → rayon = exactement la taille du quadrant
+                                g2.fillArc(xFront + gap, yFront + gap, widthFront - gap * 2, heigthFront - gap * 2, startAngle, 90);
+
+                                g2.setClip(oldClip);
+                                g2.setColor(savedColor);
                                 break;
-                            // TODO autres formes
+                            }
+                            case SubShape.Carre: {
+                                Color savedColor = g.getColor();
+                                g.fillRect(qx, qy, qw, qh);
+                                g.setColor(savedColor);
+                                break;
+                            }
                         }
                     }
                 }
