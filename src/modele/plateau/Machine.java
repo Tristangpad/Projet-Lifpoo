@@ -13,6 +13,9 @@ public class Machine implements Runnable {
 
     protected Point dimension = new Point(1,1);
 
+    public void setDirection(Direction dir) {
+        this.d = dir;
+    }
 
     public Machine()
     {
