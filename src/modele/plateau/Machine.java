@@ -9,7 +9,8 @@ import java.util.Queue;
 public class Machine implements Runnable {
     LinkedList<Item> current;
     Case c;
-    Direction d = Direction.North; // par défaut, pour commencer, tout est orienté au north
+    Direction d = Direction.North;// par défaut, pour commencer, tout est orienté au north
+    private boolean aRecuCeTick = false;
 
     protected Point dimension = new Point(1,1);
 
@@ -39,15 +40,32 @@ public class Machine implements Runnable {
         }
     }
 
-    public void send() // la machine dépose un item sur sa ou ses sorties
-    {
-        Case up = c.plateau.getCase(c, d);
-        if (up != null) {
-            Machine m = up.getMachine();
-            if (m != null && !current.isEmpty()) {
-                Item item = current.getFirst();
-                m.current.add(item);
-                current.remove(item);
+    public boolean getARecuCeTick() {
+        return aRecuCeTick;
+    }
+
+    public void reset_ARecuCeTick() {
+        aRecuCeTick = false;
+    }
+
+    public boolean isFull() {
+        return !current.isEmpty();
+    }
+
+    public boolean receive(Item item) {
+        if (isFull()) { return false; }
+        current.add(item);
+        aRecuCeTick = true;
+        return true;
+    }
+
+    public void send() {
+        if (aRecuCeTick) {return;}
+        Case destination = c.plateau.getCase(c, d);
+        if (destination != null) {
+            Machine m = destination.getMachine();
+            if (m != null && !this.current.isEmpty() && !m.isFull()) {
+                m.receive(this.current.removeFirst());
             }
         }
     }

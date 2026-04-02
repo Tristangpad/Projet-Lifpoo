@@ -17,17 +17,19 @@ public class Tapis extends Machine{
 
     public Direction getDirection() { return d; }
 
+    // Tapis.java
     @Override
-    public void send() // la machine dépose un item sur sa ou ses sorties
-    {
+    public void send() {
+        if (getARecuCeTick()) return; // ← empêche le double-move
+        if (this.d == null || this.c == null || this.c.plateau == null) return;
 
-        Case destination = c.plateau.getCase(c, d);
+        Case destination = this.c.plateau.getCase(this.c, this.d);
         if (destination != null) {
             Machine m = destination.getMachine();
-            if (m != null && !current.isEmpty()) {
-                Item item = current.getFirst();
-                m.current.add(item);
-                current.remove(item);
+            if (m != null && !this.current.isEmpty()) {
+                if (m.receive(this.current.getFirst())) { // ← receive() vérifie isFull() + set aRecuCeTick
+                    this.current.removeFirst();
+                }
             }
         }
     }

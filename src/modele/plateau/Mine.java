@@ -13,12 +13,9 @@ public class Mine extends Machine {
     @Override
     public void work() { // TODO : modifier, suivant le gisement (fais)
         Item gisement = c.getGisement();
-        if (new Random().nextInt(4) == 0 && gisement != null) {
-            if (c == null) return;
-            current.add(new ItemShape( ( (ItemShape) gisement).getConfigItem() ) );
-            System.out.println("vient de creer un objet %nb_obj");
+        if (!isFull() && new Random().nextInt(4) == 0 && gisement != null) {
+            current.add(new ItemShape( ((ItemShape) gisement).getConfigItem() ));
         }
-
     }
 
     @Override

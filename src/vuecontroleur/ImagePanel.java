@@ -120,8 +120,6 @@ public class ImagePanel extends JPanel {
                             case modele.item.Color.Yellow:
                                 g.setColor(Color.YELLOW);
                                 break;
-                            case modele.item.Color.Purple:
-                                g.setColor(Color.PURPLE);
 
                             // TODO autres couleurs
                         }
