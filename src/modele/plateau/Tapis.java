@@ -20,16 +20,20 @@ public class Tapis extends Machine{
     // Tapis.java
     @Override
     public void send() {
-        if (getARecuCeTick()) return; // ← empêche le double-move
+        if (getARecuCeTick()) return; //empeche le double deplacement
         if (this.d == null || this.c == null || this.c.plateau == null) return;
 
         Case destination = this.c.plateau.getCase(this.c, this.d);
         if (destination != null) {
             Machine m = destination.getMachine();
+
+
+
             if (m != null && !this.current.isEmpty()) {
-                if (m.receive(this.current.getFirst())) { // ← receive() vérifie isFull() + set aRecuCeTick
+                if (m.receive(this.current.getFirst())) {//receive() vérifie isFull() + set aRecuCeTick
                     this.current.removeFirst();
                 }
+                if(m instanceof ZoneDepot){m.current.add(current.getFirst());}
             }
         }
     }

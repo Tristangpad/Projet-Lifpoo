@@ -64,8 +64,11 @@ public class Machine implements Runnable {
         Case destination = c.plateau.getCase(c, d);
         if (destination != null) {
             Machine m = destination.getMachine();
+
+
             if (m != null && !this.current.isEmpty() && !m.isFull()) {
                 m.receive(this.current.removeFirst());
+                if(m instanceof ZoneDepot){m.current.add(current.getFirst());}
             }
         }
     }

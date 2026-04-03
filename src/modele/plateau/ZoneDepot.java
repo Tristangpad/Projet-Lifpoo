@@ -28,6 +28,7 @@ public class ZoneDepot extends Machine {
                 niveau.incrementer();
             }
             current.removeFirst();
+
         }
     }
 }

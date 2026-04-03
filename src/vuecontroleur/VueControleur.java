@@ -35,6 +35,7 @@ public class VueControleur extends JFrame implements Observer {
     private JFrame frame;
     private Menu menu;
 
+
     private double rotationAngle = Math.toRadians(90);
 
     // icones affichées dans la grille
@@ -78,6 +79,10 @@ public class VueControleur extends JFrame implements Observer {
     private GridBagConstraints contrainteMenu;
     private JPanel introNiveau;
     private GridBagConstraints contrainteNiveau;
+    private JPanel niveauOverlay;
+    private GridBagConstraints contrainteNiveauOverlay;
+    private ImagePanel niveauOverlayForme;
+
 
     private int casePX = -1; //par defaut
     private int casePY = -1;
@@ -239,6 +244,13 @@ public class VueControleur extends JFrame implements Observer {
         menuOverlay.repaint();
     }
 
+    public void mettreAJourNiveauOverlay(Niveau n) {
+        if (n != null) {
+            niveauOverlayForme.setShape(new ItemShape(n.getFormeDemander()));
+            niveauOverlayForme.repaint();
+        }
+    }
+
     private void placerLesComposantsGraphiques() {
         setTitle("ShapeCraft");
         setResizable(true);
@@ -263,6 +275,10 @@ public class VueControleur extends JFrame implements Observer {
         contrainteMenu.ipady = 10;
         contrainteMenu.insets = new Insets(0, 0, 50, 0);
 
+        //mise en forme de l'affichage des objectifs pour le niveau actuelle
+        contrainteNiveauOverlay = new GridBagConstraints();
+        contrainteNiveauOverlay.anchor = GridBagConstraints.SOUTH;
+
         //mise en forme de la bar de progression des niveaux
         barProgression.setStringPainted(true);
         barProgression.setPreferredSize(new Dimension(sizeX * pxCase, 30));
@@ -281,7 +297,31 @@ public class VueControleur extends JFrame implements Observer {
 
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
 
+        //affichage, création et mise en page de la preview des objectifs des niveau
+        niveauOverlay = new JPanel();
+        niveauOverlay.setLayout(new BoxLayout(niveauOverlay, BoxLayout.Y_AXIS));
+        niveauOverlay.setBackground(new Color(0, 0, 0, 150));
+        niveauOverlay.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+        JLabel labelObjectif = new JLabel("Objectif :");
+        labelObjectif.setForeground(Color.WHITE);
+        labelObjectif.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        niveauOverlayForme = new ImagePanel();
+        niveauOverlayForme.setPreferredSize(new Dimension(80, 80));
+        niveauOverlayForme.setMaximumSize(new Dimension(80, 80));
+        niveauOverlayForme.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        niveauOverlay.add(labelObjectif);
+        niveauOverlay.add(niveauOverlayForme);
+
+        contrainteNiveauOverlay = new GridBagConstraints();
+        contrainteNiveauOverlay.anchor = GridBagConstraints.NORTHEAST; // ← coin haut-droite
+        contrainteNiveauOverlay.weightx = 1.0;
+        contrainteNiveauOverlay.weighty = 1.0;
+        contrainteNiveauOverlay.insets = new Insets(10, 0, 0, 10); // ← marge du bord
+
+        menuOverlay.add(niveauOverlay, contrainteNiveauOverlay);
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
@@ -376,7 +416,7 @@ public class VueControleur extends JFrame implements Observer {
                 Case c = plateau.getCases()[x][y];
                 Machine m = c.getMachine();
 
-                if (c.isExtention()){
+                if (c.isExtention()) {
                     continue;
                 }
 
@@ -384,9 +424,8 @@ public class VueControleur extends JFrame implements Observer {
 
                     Image ico = getIconeMachine(m);
 
-                    if(m.getLargeur() > 1 || m.getHauteur() > 1)
-                    {
-                        for(int xx = 0;xx < m.getLargeur();xx++) {
+                    if (m.getLargeur() > 1 || m.getHauteur() > 1) {
+                        for (int xx = 0; xx < m.getLargeur(); xx++) {
                             for (int yy = 0; yy < m.getHauteur(); yy++) {
                                 if (x + xx < sizeX && y + yy < sizeY) {
                                     tabIP[x + xx][y + yy].setPartie(xx, m.getLargeur(), yy, m.getHauteur());
@@ -394,9 +433,8 @@ public class VueControleur extends JFrame implements Observer {
                                 }
                             }
                         }
-                    }else {
-                        if(m instanceof Tapis tapis)
-                        {
+                    } else {
+                        if (m instanceof Tapis tapis) {
                             tapis.setDirection(tapis.getDirection());
                         }
                         tabIP[x][y].setBackground(ico);
@@ -428,15 +466,12 @@ public class VueControleur extends JFrame implements Observer {
                     int progression = n.getProgression() * 100 / n.getObjectif();
                     barProgression.setValue(progression);
                     barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1) + " — " + progression + "%" + " | Objectif : " + n.getObjectif());
+
+                    mettreAJourNiveauOverlay(n);
                 }
-
-
-
             }
         }
         grilleIP.repaint();
-
-
     }
 
     @Override

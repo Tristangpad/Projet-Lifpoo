@@ -78,14 +78,19 @@ public class Plateau extends Observable implements Runnable {
         notifyObservers();
     }
 
-    public void suppMachinePlateau(int x, int y){
+    public void suppMachinePlateau(int x, int y) {
 
         Machine m = grilleCases[x][y].getMachine();
-
-        for (int dx = 0; dx < m.getLargeur(); dx++) {
-            for (int dy = 0; dy < m.getHauteur(); dy++) {
-                grilleCases[x + dx][y + dy].suppMachineCase();
-                grilleCases[x + dx][y + dy].suppMachinePrincipale();
+        if(m != null) {
+            if (m.getHauteur() == 1 || m.getLargeur() == 1) {
+                grilleCases[x][y].suppMachineCase();
+            } else {
+                for (int dx = 0; dx < m.getLargeur(); dx++) {
+                    for (int dy = 0; dy < m.getHauteur(); dy++) {
+                        grilleCases[x + dx][y + dy].suppMachineCase();
+                        grilleCases[x + dx][y + dy].suppMachinePrincipale();
+                    }
+                }
             }
         }
         setChanged();
