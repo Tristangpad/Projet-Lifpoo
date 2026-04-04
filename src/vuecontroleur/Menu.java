@@ -14,6 +14,7 @@ public class Menu extends JPanel {
     private final JButton BTapis;
     private final JButton BRotater;
     private final JButton BCutter;
+    private final JButton BPainter;
 
 
 
@@ -27,7 +28,7 @@ public class Menu extends JPanel {
         ImageIcon icoRotater = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
 
         ImageIcon icoCutter = new ImageIcon(new ImageIcon("./data/sprites/buildings/cutter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
-
+        ImageIcon icoPainter = new ImageIcon(new ImageIcon("./data/sprites/buildings/painter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
 
         BTapis = new JButton("Tapis",icoTapisDroite);
         BMine = new JButton("Mine",icoMine);
@@ -35,6 +36,7 @@ public class Menu extends JPanel {
         BRotater = new JButton("Rotater",icoRotater);
 
         BCutter = new JButton("Cutter",icoCutter);
+        BPainter = new JButton("Painter",icoPainter);
 
         configBouton(BTapis);
         configBouton(BMine);
@@ -42,6 +44,7 @@ public class Menu extends JPanel {
         configBouton(BRotater);
 
         configBouton(BCutter);
+        configBouton(BPainter);
 
         add(BTapis);
         add(BMine);
@@ -49,6 +52,7 @@ public class Menu extends JPanel {
         add(BRotater);
 
         add(BCutter);
+        add(BPainter);
 
     }
 
@@ -57,6 +61,7 @@ public class Menu extends JPanel {
     public JButton getBPoubelle() { return BPoubelle; }
     public JButton getBRotater() { return BRotater; }
     public JButton getBCutter() { return BCutter;}
+    public JButton getBPainter() { return BPainter;}
 
     private void configBouton(JButton b) {
         b.setVerticalTextPosition(SwingConstants.TOP);

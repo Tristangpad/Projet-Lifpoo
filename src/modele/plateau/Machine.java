@@ -10,6 +10,7 @@ public class Machine implements Runnable {
     LinkedList<Item> current;
     Case c;
     Direction d = Direction.North;// par défaut, pour commencer, tout est orienté au north
+
     private boolean aRecuCeTick = false;
 
     protected Point dimension = new Point(1,1);
@@ -59,6 +60,11 @@ public class Machine implements Runnable {
         return true;
     }
 
+    public boolean receiveFrom(Item item, Direction dir) {
+        return receive(item); //par defaut recoit de toutes les dir
+    }
+
+
     public void send() {
         if (aRecuCeTick) {return;}
         Case destination = c.plateau.getCase(c, d);
@@ -67,8 +73,9 @@ public class Machine implements Runnable {
 
 
             if (m != null && !this.current.isEmpty() && !m.isFull()) {
-                m.receive(this.current.removeFirst());
-                if(m instanceof ZoneDepot){m.current.add(current.getFirst());}
+                if (m.receiveFrom(current.getFirst(), d.oppose())) {
+                    current.removeFirst();
+                }
             }
         }
     }

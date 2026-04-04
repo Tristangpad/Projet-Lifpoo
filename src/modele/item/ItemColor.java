@@ -1,9 +1,18 @@
 package modele.item;
 
-public class ItemColor extends Item {
-    Color color;
+import modele.item.Couleur.*;
 
-    public void transform(Color add) { // faire varier la couleur suivant la couleur ajoutée
+public class ItemColor extends Item {
+    Couleur color;
+
+    public ItemColor(Couleur color) {
+        this.color = color;
+    }
+
+    public Couleur getColor() { return color; }
+
+
+    public void transform(Couleur add) { // faire varier la couleur suivant la couleur ajoutée
 
     }
 

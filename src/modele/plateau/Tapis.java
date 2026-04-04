@@ -17,24 +17,23 @@ public class Tapis extends Machine{
 
     public Direction getDirection() { return d; }
 
-    // Tapis.java
     @Override
     public void send() {
-        if (getARecuCeTick()) return; //empeche le double deplacement
+        if (getARecuCeTick()) return;
         if (this.d == null || this.c == null || this.c.plateau == null) return;
+        if (this.current.isEmpty()) return;
 
         Case destination = this.c.plateau.getCase(this.c, this.d);
         if (destination != null) {
+
             Machine m = destination.getMachine();
-
-
-
             if (m != null && !this.current.isEmpty()) {
-                if (m.receive(this.current.getFirst())) {//receive() vérifie isFull() + set aRecuCeTick
+                if (m.receiveFrom(this.current.getFirst(), this.d.oppose())) {
                     this.current.removeFirst();
                 }
-                if(m instanceof ZoneDepot){m.current.add(current.getFirst());}
             }
         }
     }
 }
+
+

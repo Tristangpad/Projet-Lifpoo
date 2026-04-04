@@ -5,7 +5,7 @@ public class ItemShape extends Item {
     private String configurationItem;
 
     private SubShape[] tabSubShapes;
-    private Color[] tabColors;
+    private Couleur[] tabColors;
     public enum Layer {one, two, three};
 
 
@@ -19,9 +19,9 @@ public class ItemShape extends Item {
         }
     }
 
-    public Color[] getColors(Layer l) {
+    public Couleur[] getColors(Layer l) {
         switch(l) {
-            case one : return new Color[] {tabColors[0], tabColors[1], tabColors[2], tabColors[3]};
+            case one : return new Couleur[] {tabColors[0], tabColors[1], tabColors[2], tabColors[3]};
             // TODO two & three
             default:
                 throw new IllegalStateException("Unexpected value: " + l);
@@ -38,7 +38,7 @@ public class ItemShape extends Item {
         this.configurationItem = str;
 
         tabSubShapes = new SubShape[str.length()/2 ];
-        tabColors = new Color[str.length()/2];
+        tabColors = new Couleur[str.length()/2];
 
         for (int i = 0; i < 4; i++) { // fait uniquement pour la première couche
             switch (str.charAt(i*2)) {
@@ -52,13 +52,13 @@ public class ItemShape extends Item {
             }
 
             switch (str.charAt((i*2 + 1))) {
-                case 'r' : tabColors[i] = Color.Red; break;
-                case 'g'  : tabColors[i] = Color.Green; break;
-                case 'b' : tabColors[i] = Color.Blue; break;
-                case 'y'  : tabColors[i] = Color.Yellow; break;
-                case 'p'  : tabColors[i] = Color.Purple; break;
-                case 'c' : tabColors[i] = Color.Cyan; break;
-                case 'w' : tabColors[i] = Color.White; break;
+                case 'r' : tabColors[i] = Couleur.Red; break;
+                case 'g'  : tabColors[i] = Couleur.Green; break;
+                case 'b' : tabColors[i] = Couleur.Blue; break;
+                case 'y'  : tabColors[i] = Couleur.Yellow; break;
+                case 'p'  : tabColors[i] = Couleur.Purple; break;
+                case 'c' : tabColors[i] = Couleur.Cyan; break;
+                case 'w' : tabColors[i] = Couleur.White; break;
                 case '-' : tabColors[i] = null; break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + str.charAt((i + 1)*2));
@@ -87,16 +87,18 @@ public class ItemShape extends Item {
         ItemShape itemConteneur[] = new ItemShape[] {new ItemShape(moitierGauche),new ItemShape(moitierDroite)};
         return itemConteneur;
     }
-
+//TODO : finir les diff cas
     public String adapterShape(SubShape s){
         if(s == SubShape.Carre)return "C";
         if(s == SubShape.None)return "-";
         return "-";
     }
 
-    public String adapterCouleur(Color c){
-        if(c == Color.Red)return "r";
-        if(c == Color.White)return "b";
+    public String adapterCouleur(Couleur c){
+        if(c == Couleur.Red)return "r";
+        if(c == Couleur.White)return "b";
+        if(c == Couleur.Yellow)return "y";
+        if(c == Couleur.Cyan)return "c";
         return "-";
     }
 
@@ -109,7 +111,7 @@ public class ItemShape extends Item {
         bufferSubShapes [2] = tabSubShapes[1];
         bufferSubShapes [3] = tabSubShapes[2];
 
-        Color[] bufferColors = new Color[4];
+        Couleur[] bufferColors = new Couleur[4];
         bufferColors[0] = tabColors[3];
         bufferColors [1] = tabColors[0];
         bufferColors [2] = tabColors[1];
@@ -128,9 +130,19 @@ public class ItemShape extends Item {
         return null;
     }
 
-    public void Color(Color c) {
+    public void Color(Couleur c) {
 
     }
+
+    public void paint(Couleur c) {
+        for (int i = 0; i < 4; i++) {
+            if (tabSubShapes[i] != SubShape.None) {
+                tabColors[i] = c;
+            }
+        }
+    }
+
+
 
     public String getConfigItem() { return configurationItem; }
 }

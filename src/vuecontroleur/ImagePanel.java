@@ -47,6 +47,7 @@ public class ImagePanel extends JPanel {
     public void setFront(Image _imgFront) {
         imgFront = _imgFront;
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -93,7 +94,7 @@ public class ImagePanel extends JPanel {
 
             // TODO autres layers
             SubShape[] tabS = shape.getSubShapes(ItemShape.Layer.one);
-            modele.item.Color[] tabC = shape.getColors(ItemShape.Layer.one);
+            modele.item.Couleur[] tabC = shape.getColors(ItemShape.Layer.one);
 
             for (int i = 0; i < 4; i++) {
 
@@ -102,22 +103,22 @@ public class ImagePanel extends JPanel {
                     if (ss != SubShape.None) {
 
                         switch (tabC[i]) {
-                            case modele.item.Color.Red:
+                            case modele.item.Couleur.Red:
                                 g.setColor(Color.RED);
                                 break;
-                            case modele.item.Color.Green:
+                            case modele.item.Couleur.Green:
                                 g.setColor(Color.GREEN);
                                 break;
-                            case modele.item.Color.White:
+                            case modele.item.Couleur.White:
                                 g.setColor(Color.WHITE);
                                 break;
-                            case modele.item.Color.Cyan:
+                            case modele.item.Couleur.Cyan:
                                 g.setColor(Color.CYAN);
                                 break;
-                            case modele.item.Color.Blue:
+                            case modele.item.Couleur.Blue:
                                 g.setColor(Color.BLUE);
                                 break;
-                            case modele.item.Color.Yellow:
+                            case modele.item.Couleur.Yellow:
                                 g.setColor(Color.YELLOW);
                                 break;
 
@@ -134,7 +135,7 @@ public class ImagePanel extends JPanel {
 
                         switch (ss) {
                             case SubShape.Circle: {
-                                Color savedColor = g.getColor();
+                                java.awt.Color savedColor = g.getColor();
                                 Graphics2D g2 = (Graphics2D) g;
 
                                 Shape oldClip = g2.getClip();
@@ -148,7 +149,7 @@ public class ImagePanel extends JPanel {
                                 break;
                             }
                             case SubShape.Carre: {
-                                Color savedColor = g.getColor();
+                                java.awt.Color savedColor = g.getColor();
                                 g.fillRect(qx, qy, qw, qh);
                                 g.setColor(savedColor);
                                 break;

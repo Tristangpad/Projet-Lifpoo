@@ -11,10 +11,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
+import modele.item.Couleur;
+import modele.plateau.Painter;
 import vuecontroleur.Menu;
 import modele.item.Item;
 import modele.item.ItemColor;
 import modele.item.ItemShape;
+import static modele.item.Couleur.*;
 import modele.jeu.Jeu;
 import modele.plateau.*;
 
@@ -45,6 +48,14 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoTapisDroite;
 
     private Image icoRouge;
+    private Image icoBleu;
+    private Image icoCyan;
+    private Image icoVert;
+    private Image icoViolet;
+    private Image icoGris;
+    private Image icoBlanc;
+    private Image icoJaune;
+
     private Image icoPoubelle;
 
     private Image icoMineHaut;
@@ -53,6 +64,7 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoMineDroite;
 
     private Image icoCutter;
+    private Image icoPainter;
     private Image icoZoneDepot;
 
     private Image icoRotaterHaut;
@@ -138,7 +150,16 @@ public class VueControleur extends JFrame implements Observer {
         icoTapisGaucheHaut  = rotateIcon(icoTapisHautDroite,270);
         icoTapisGaucheBas = rotateIcon(icoTapisHautGauche,270);
 
-        icoRouge = new ImageIcon("./data/sprites/colors/blue.png").getImage();
+        //chargement des couleurs
+        icoRouge = new ImageIcon("./data/sprites/colors/red.png").getImage();
+        icoBleu = new ImageIcon("./data/sprites/colors/blue.png").getImage();
+        icoCyan = new ImageIcon("./data/sprites/colors/cyan.png").getImage();
+        icoVert = new ImageIcon("./data/sprites/colors/green.png").getImage();
+        icoViolet = new ImageIcon("./data/sprites/colors/purple.png").getImage();
+        icoGris = new ImageIcon("./data/sprites/colors/uncolored.png").getImage();
+        icoBlanc = new ImageIcon("./data/sprites/colors/white.png").getImage();
+        icoJaune = new ImageIcon("./data/sprites/colors/yellow.png").getImage();
+
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
 
         icoMineHaut = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
@@ -153,8 +174,38 @@ public class VueControleur extends JFrame implements Observer {
 
         //machine avec extention
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
+        icoPainter = new ImageIcon("./data/sprites/buildings/painter.png").getImage();
         icoZoneDepot = new ImageIcon("./data/sprites/buildings/hub.png").getImage();
 
+    }
+
+    private Image getIconeColor(Couleur c) {
+        switch (c) {
+            case Red -> {
+                return icoRouge;
+            }
+            case White -> {
+                return icoBlanc;
+            }
+            case Blue -> {
+                return icoBleu;
+            }
+            case Cyan -> {
+                return icoCyan;
+            }
+            case Green -> {
+                return icoVert;
+            }
+            case Purple -> {
+                return icoViolet;
+            }
+            case Yellow -> {
+                return icoJaune;
+            }
+            default -> {
+                return icoGris;
+            }
+        }
     }
 
     private Image getIconeMachine(Machine m) {
@@ -222,6 +273,7 @@ public class VueControleur extends JFrame implements Observer {
             }
 
         if (m instanceof Cutter)    return icoCutter;
+        if (m instanceof Painter)    return icoPainter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
         return null;
     }
@@ -230,6 +282,10 @@ public class VueControleur extends JFrame implements Observer {
         if(introNiveau != null){
             menuOverlay.remove(introNiveau);
         }
+
+        menu.setVisible(false);
+        if (introNiveau != null) introNiveau.setVisible(false);
+
         introNiveau = new NiveauAfficher(n,numNiveau);
 
         contrainteNiveau = new GridBagConstraints();
@@ -296,6 +352,7 @@ public class VueControleur extends JFrame implements Observer {
         menu.getBRotater().addActionListener(e -> jeu.setMachineChoisie(new Rotater()));
 
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
+        menu.getBPainter().addActionListener(e -> jeu.setMachineChoisie(new Painter()));
 
         //affichage, création et mise en page de la preview des objectifs des niveau
         niveauOverlay = new JPanel();
@@ -444,12 +501,11 @@ public class VueControleur extends JFrame implements Observer {
 
                     if (current instanceof ItemShape) {
                         tabIP[x][y].setShape((ItemShape) current);
+                    } else if (current instanceof ItemColor itemCouleur) {
+                        // affiche l'icône de couleur en front
+                        tabIP[x][y].setFront(getIconeColor(itemCouleur.getColor()));
                     } else {
                         tabIP[x][y].supprimeShape();
-                    }
-
-                    if (current instanceof ItemColor) {
-                        // tabIP[x][y].setFront(); TODO : placer l'icone des couleurs approprié
                     }
 
 
@@ -458,7 +514,10 @@ public class VueControleur extends JFrame implements Observer {
                 if (gisement != null) {
                     if (gisement instanceof ItemShape) {
                         tabIP[x][y].setShape((ItemShape) gisement);
+                    } else if (gisement instanceof ItemColor itemCouleur) {
+                        tabIP[x][y].setFront(getIconeColor(itemCouleur.getColor())); // ← affiche la couleur du gisement
                     }
+
                 }
 
                 Niveau n = jeu.getNiveauActuel();

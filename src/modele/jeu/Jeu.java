@@ -1,8 +1,10 @@
 
 package modele.jeu;
 
+import modele.item.ItemColor;
 import modele.plateau.*;
 import modele.item.ItemShape;
+import static modele.item.Couleur.*;
 
 public class Jeu extends Thread{
     private Plateau plateau;
@@ -31,6 +33,8 @@ public class Jeu extends Thread{
         plateau.transformeCaseEnGisement(7, 3, new  ItemShape("RrCrRrCr"));
         plateau.transformeCaseEnGisement(9, 3, new  ItemShape("RbCrRrCb"));
 
+        plateau.transformeCaseEnGisement(11, 3, new ItemColor(White));
+
 
         plateau.setMachine(5, 10, new Mine());
         plateau.setMachine(5, 5, new Poubelle());
@@ -58,6 +62,8 @@ public class Jeu extends Thread{
         { plateau.setMachine(x, y, new Cutter()); }
         else if (machineChoisie instanceof Rotater)
         { plateau.setMachine(x, y, new Rotater()); }
+        else if (machineChoisie instanceof Painter)
+        { plateau.setMachine(x, y, new Painter()); }
     }
 
     public void slide(int x, int y) {
@@ -86,6 +92,8 @@ public class Jeu extends Thread{
         { plateau.setMachine(x, y, new Cutter()); }
         else if (machineChoisie instanceof Rotater)
         { plateau.setMachine(x, y, new Rotater()); }
+        else if (machineChoisie instanceof Painter)
+        { plateau.setMachine(x, y, new Painter()); }
     }
 
     public Direction calculLiaisonTapis(int x1, int y1,int x2, int y2) {

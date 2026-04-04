@@ -13,10 +13,20 @@ public enum Direction {
     public Direction suivante() {
         return switch(this) {
             case North -> East;
-            case  West-> North;
+            case West-> North;
             case South -> West;
             case East -> South;
         };
     }
+
+    public Direction oppose() {
+        return switch (this) {
+            case North -> South;
+            case South -> North;
+            case East -> West;
+            case West -> East;
+        };
+    }
+
 
 }

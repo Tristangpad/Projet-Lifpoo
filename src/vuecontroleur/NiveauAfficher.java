@@ -17,12 +17,12 @@ public class NiveauAfficher extends JPanel {
 
     private JButton btnCommencer;
 
-    private ImagePanel formeObjectif; // pour afficher la forme demandée
+    private ImagePanel formeObjectif; //pour afficher la forme demandée
 
     public NiveauAfficher(Niveau n, int numeroNiveau) {
         setLayout(new GridBagLayout());
         setBackground(new Color(0, 0, 0, 150)); // fond semi-transparent
-        setOpaque(true);
+        setOpaque(false);//sinon la partie opaque n recouvre pas tous
 
         JPanel contenu = new JPanel();
         contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
@@ -53,6 +53,11 @@ public class NiveauAfficher extends JPanel {
         btnCommencer.addActionListener(e -> {
             Container parent = getParent();
             parent.remove(this);
+
+            for (Component c : parent.getComponents()) {
+                c.setVisible(true);
+            }
+
             parent.revalidate();
             parent.repaint();
         });
@@ -70,4 +75,13 @@ public class NiveauAfficher extends JPanel {
 
         add(contenu);
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        //rends tous le fond bien oppaque au début du niveau
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight()); //couvre tout
+        super.paintComponent(g);
+    }
+
 }
