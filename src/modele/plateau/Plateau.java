@@ -42,7 +42,7 @@ public class Plateau extends Observable implements Runnable {
     }
 
     private void initPlateauVide() {
-
+        //init du plateau sans rien
         for (int x = 0; x < SIZE_X; x++) {
             for (int y = 0; y < SIZE_Y; y++) {
                 grilleCases[x][y] = new Case(this);
@@ -52,9 +52,12 @@ public class Plateau extends Observable implements Runnable {
     }
 
     public void setMachine(int x, int y, Machine m) {
+        //prends une machine en paramètre
 
+        //err : cas ou l'ont essaie de placer une mine ailleurs qu'un gisement
         if( m instanceof Mine && (grilleCases[x][y].getGisement() == null) ) return;
 
+        //err : cas pour machine impossible a placer car déborde ou superpossé a une autre
         for (int xx = 0; xx < m.getLargeur(); xx++) {
             for (int yy = 0; yy < m.getHauteur(); yy++) {
                 Case c = grilleCases[x+ xx][y + yy];
@@ -63,9 +66,10 @@ public class Plateau extends Observable implements Runnable {
             }
 
         }
+        //setter
         grilleCases[x][y].setMachine(m);
 
-        //extention si machine dim > 2
+        //setter si machine dim > 2
         for (int xx = 0; xx < m.getLargeur(); xx++) {
             for (int yy = 0; yy < m.getHauteur(); yy++) {
                 if (xx == 0 && yy == 0){
@@ -79,23 +83,22 @@ public class Plateau extends Observable implements Runnable {
     }
 
     public void suppMachinePlateau(int x, int y) {
-
         Machine m = grilleCases[x][y].getMachine();
-        if(m != null) {
-            if (m.getHauteur() == 1 || m.getLargeur() == 1) {
-                grilleCases[x][y].suppMachineCase();
-            } else {
-                for (int dx = 0; dx < m.getLargeur(); dx++) {
-                    for (int dy = 0; dy < m.getHauteur(); dy++) {
-                        grilleCases[x + dx][y + dy].suppMachineCase();
-                        grilleCases[x + dx][y + dy].suppMachinePrincipale();
-                    }
-                }
+        //err : cas si la case est vide alors l'ont ne vas pas plus loins
+        if (m == null) return;
+
+        //quelque soit la taille de la machine l'ont supprime sa partie principale et ses extentions si elle en possède
+        for (int dx = 0; dx < m.getLargeur(); dx++) {
+            for (int dy = 0; dy < m.getHauteur(); dy++) {
+                grilleCases[x + dx][y + dy].suppMachineCase();
+                grilleCases[x + dx][y + dy].suppMachinePrincipale();
             }
         }
+
         setChanged();
         notifyObservers();
     }
+
     public void changerDirMachine(int x, int y) {
         Machine m = grilleCases[x][y].getMachine();
 
@@ -143,6 +146,8 @@ public class Plateau extends Observable implements Runnable {
 
     public void setNiveauActuel(Niveau n) {
         this.niveauActuel = n;
+        //si il y a un dépot sur le plateau de jeux alors les objectifs et les informations
+        //du niveau actuelle lui sont init
         for (int x = 0; x < SIZE_X; x++) {
             for (int y = 0; y < SIZE_Y; y++) {
                 Machine m = grilleCases[x][y].getMachine();
@@ -155,6 +160,9 @@ public class Plateau extends Observable implements Runnable {
         notifyObservers(n);
     }
 
+    public Point getPosition(Case c) {
+        return map.get(c);
+    }
 
     @Override
     public void run() {

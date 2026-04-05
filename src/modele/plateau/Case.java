@@ -17,12 +17,12 @@ public class Case {
     protected Machine machine;
     protected Item gisement; // certaines cases sont des gisements, pour placer des mines
 
-    protected Case machinePrincipale; //si jamais l'on pose une machine qui est a des dimentions > a 1 par 1, permet d'en avoir la base
+    protected Case machinePrincipale; //si jamais l'on pose une machine qui est a des dimentions > a 1 par 1, permet d'en avoir l'origine
 
     public void initCase(){
+        //une case peut etre soit un gisement soit une machine ou les 2
         this.machine = null;
         this.gisement = null;
-
     }
 
     public void setMachine(Machine m) {
@@ -35,13 +35,13 @@ public class Case {
     public void suppMachineCase(){
         this.machine = null;
     }
-    //a voir
+
     public void setGisement(Item g) {
-        this.gisement = g; // cast
+        this.gisement = g;
     }
 
-
     public Machine getMachine() {
+        //cas ou machine est une extention retourne donc la machine a laquel elle est attacher
         if (machine == null && machinePrincipale != null) {
             return machinePrincipale.getMachine(); //machine principale
         }

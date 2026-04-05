@@ -313,6 +313,7 @@ public class VueControleur extends JFrame implements Observer {
         setSize(sizeX * pxCase, sizeX * pxCase);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
+
         menu = new Menu();
         menuOverlay = (JPanel) getGlassPane();
         menuOverlay.setLayout(new GridBagLayout());
@@ -321,6 +322,8 @@ public class VueControleur extends JFrame implements Observer {
 
         grilleIP = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
         tabIP = new ImagePanel[sizeX][sizeY];
+        grilleIP.setBackground(new Color(200, 200, 200));
+
 
         //mise en forme du menue de choix de machine
         contrainteMenu = new GridBagConstraints();
@@ -329,16 +332,19 @@ public class VueControleur extends JFrame implements Observer {
         contrainteMenu.fill = GridBagConstraints.HORIZONTAL;
         contrainteMenu.ipadx = 10;
         contrainteMenu.ipady = 10;
-        contrainteMenu.insets = new Insets(0, 0, 50, 0);
+        contrainteMenu.insets = new Insets(0, 20, 20, 20);
+
 
         //mise en forme de l'affichage des objectifs pour le niveau actuelle
         contrainteNiveauOverlay = new GridBagConstraints();
         contrainteNiveauOverlay.anchor = GridBagConstraints.SOUTH;
 
         //mise en forme de la bar de progression des niveaux
-        barProgression.setStringPainted(true);
         barProgression.setPreferredSize(new Dimension(sizeX * pxCase, 30));
         add(barProgression, BorderLayout.NORTH);
+        barProgression.setBackground(new Color(30, 30, 30));
+        barProgression.setForeground(new Color(100, 180, 100));
+        barProgression.setStringPainted(true);
 
 
         //ajout du menue avec sa mise en forme a l'overlay générale du jeux qui permet une superposition entre les 2
@@ -359,6 +365,7 @@ public class VueControleur extends JFrame implements Observer {
         niveauOverlay.setLayout(new BoxLayout(niveauOverlay, BoxLayout.Y_AXIS));
         niveauOverlay.setBackground(new Color(0, 0, 0, 150));
         niveauOverlay.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
 
         JLabel labelObjectif = new JLabel("Objectif :");
         labelObjectif.setForeground(Color.WHITE);
@@ -383,7 +390,7 @@ public class VueControleur extends JFrame implements Observer {
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 ImagePanel iP = new ImagePanel();
-
+                iP.setBackground(new Color(220, 220, 220));
 
                 tabIP[x][y] = iP; // on conserve les cases graphiques dans tabJLabel pour avoir un accès pratique à celles-ci (voir mettreAJourAffichage() )
 

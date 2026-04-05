@@ -20,6 +20,10 @@ public class Menu extends JPanel {
 
     public Menu() {
 
+        //mise en forme du menue
+        setBackground(new Color(30, 30, 30, 200));
+        setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 8, 8));
 
         //importation des icônes pour le menu
         ImageIcon icoTapisDroite = new ImageIcon(new ImageIcon("./data/sprites/buildings/belt_top.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
@@ -30,6 +34,7 @@ public class Menu extends JPanel {
         ImageIcon icoCutter = new ImageIcon(new ImageIcon("./data/sprites/buildings/cutter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
         ImageIcon icoPainter = new ImageIcon(new ImageIcon("./data/sprites/buildings/painter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
 
+        //création des boutons
         BTapis = new JButton("Tapis",icoTapisDroite);
         BMine = new JButton("Mine",icoMine);
         BPoubelle = new JButton("Poubelle",icoPoubelle);
@@ -38,6 +43,7 @@ public class Menu extends JPanel {
         BCutter = new JButton("Cutter",icoCutter);
         BPainter = new JButton("Painter",icoPainter);
 
+        //config des boutons
         configBouton(BTapis);
         configBouton(BMine);
         configBouton(BPoubelle);
@@ -46,6 +52,7 @@ public class Menu extends JPanel {
         configBouton(BCutter);
         configBouton(BPainter);
 
+        //ajout des boutons au menue
         add(BTapis);
         add(BMine);
         add(BPoubelle);
@@ -56,6 +63,7 @@ public class Menu extends JPanel {
 
     }
 
+    //getters
     public JButton getBTapis() { return BTapis; }
     public JButton getBMine() { return BMine; }
     public JButton getBPoubelle() { return BPoubelle; }
@@ -63,9 +71,40 @@ public class Menu extends JPanel {
     public JButton getBCutter() { return BCutter;}
     public JButton getBPainter() { return BPainter;}
 
+    //definits l'apparance de chaque boutton dans le menue
     private void configBouton(JButton b) {
         b.setVerticalTextPosition(SwingConstants.TOP);
         b.setHorizontalTextPosition(SwingConstants.CENTER);
+
+        //style sombre
+        b.setBackground(new Color(45, 45, 45));
+        b.setForeground(new Color(220, 220, 220));
+        b.setFont(new Font("Arial", Font.BOLD, 11));
+        b.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)
+        ));
+        b.setFocusPainted(false);
+        b.setContentAreaFilled(true);
+        b.setOpaque(true);
+
+        //effet hover
+        b.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                b.setBackground(new Color(70, 70, 70)); //plus clair si survolé
+                b.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(150, 150, 150), 1),
+                        BorderFactory.createEmptyBorder(4, 4, 4, 4)
+                ));
+            }
+            public void mouseExited(MouseEvent e) {
+                b.setBackground(new Color(45, 45, 45));
+                b.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+                        BorderFactory.createEmptyBorder(4, 4, 4, 4)
+                ));
+            }
+        });
 
         Dimension tailleBouton = new Dimension(140, 140);
         b.setPreferredSize(tailleBouton);
