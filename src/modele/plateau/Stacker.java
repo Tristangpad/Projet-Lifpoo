@@ -14,17 +14,24 @@ public class Stacker extends Machine {
     }
 
     @Override
-    public boolean receiveFrom(Item item, Direction dir) {
-        if (dir == Direction.South && item instanceof ItemShape is) {
-            // première forme disponible
-            if (shapeGauche == null) {
-                shapeGauche = is;
-                return true;
-            }
-            if (shapeDroite == null) {
-                shapeDroite = is;
-                return true;
-            }
+    public boolean receiveFrom(Item item, Direction dir, Case input) {
+        //Pour les 2 entrées de la machine
+        Point posInput  = c.plateau.getPosition(input);//position du tapis qui envoie l'item dans la machine
+        Point posMachine = c.plateau.getPosition(c);//position de la case principale de la machine
+
+
+        //case de gauche
+        if (posInput.x == posMachine.x && dir == Direction.South && item instanceof ItemShape sg) {
+            if (shapeGauche != null) return false;
+            shapeGauche = sg;
+            return true;
+        }
+
+        //case de droite
+        if (posInput.x == posMachine.x + 1 && dir == Direction.South && item instanceof ItemShape sd) {
+            if (shapeDroite != null) return false;
+            shapeDroite = sd;
+            return true;
         }
         return false;
     }
@@ -36,10 +43,11 @@ public class Stacker extends Machine {
 
     @Override
     public void work() {
-        if (current.size() < 2) return;
         if (shapeGauche == null || shapeDroite == null) return;
-        shapeGauche.stack(shapeDroite);
-        current.add(shapeGauche);
+
+        ItemShape itemComplet = shapeDroite.stack(shapeGauche);
+        current.add(itemComplet);
+
         shapeGauche = null;
         shapeDroite = null;
     }
@@ -52,7 +60,7 @@ public class Stacker extends Machine {
         if (sortie == null) return;
         Machine m = sortie.getMachine();
         if (m != null && !m.isFull()) {
-            if (m.receiveFrom(current.getFirst(), Direction.South)) {
+            if (m.receiveFrom(current.getFirst(), Direction.South,c)) {
                 current.removeFirst();
             }
         }

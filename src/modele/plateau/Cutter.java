@@ -12,22 +12,18 @@ public class Cutter extends Machine {
     @Override
     public void work() {
         //si vide ne fait rien
-            if(current.isEmpty())
-            {
-                return;
-            }
+        if(current.isEmpty()) return;
+        Item item = current.getFirst();
+        if(item instanceof ItemShape)
+        {
+            //crée un couple avec une moitié gauche et une moitié droite
+            ItemShape[] coupleMoitier = ((ItemShape) item).couper();
+            current.removeFirst();//plus besoins de l'ancienne forme
+            current.add(coupleMoitier[0]);//partie gauche
+            current.add(coupleMoitier[1]);//partie droite
+        }
 
-            Item item = current.getFirst();
-            if(item instanceof ItemShape)
-            {
-                //crée un couple avec une moitié gauche et une moitié droite
-                ItemShape[] coupleMoitier = ((ItemShape) item).couper();
-                current.removeFirst();//plus besoins de l'ancienne forme
-                current.add(coupleMoitier[0]);//partie gauche
-                current.add(coupleMoitier[1]);//partie droite
-            }
-
-            //System.out.println(item);
+        //System.out.println(item);
     }
 
     @Override

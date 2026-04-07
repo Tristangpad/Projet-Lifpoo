@@ -26,7 +26,7 @@ public class Tapis extends Machine {
 
             Machine m = destination.getMachine();
             if (m != null && !this.current.isEmpty()) {
-                if (m.receiveFrom(this.current.getFirst(), this.d.oppose())) {
+                if (m.receiveFrom(this.current.getFirst(), this.d.oppose(),this.c)) {
                     this.current.removeFirst();
                 }
             }

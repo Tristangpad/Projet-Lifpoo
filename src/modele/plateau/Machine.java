@@ -66,7 +66,10 @@ public class Machine implements Runnable {
     public boolean receiveFrom(Item item, Direction dir) {
         return receive(item); //par defaut recoit de toutes les dir
     }
-
+    //surcharge de receiveFrom si parfois l'ont veut une entrer a un endroit précis de la machine
+    public boolean receiveFrom(Item item, Direction dir, Case principale) {
+        return receiveFrom(item, dir);
+    }
 
     public void send() {
         if (aRecuCeTick) {return;}
@@ -76,7 +79,7 @@ public class Machine implements Runnable {
 
 
             if (m != null && !this.current.isEmpty() && !m.isFull()) {
-                if (m.receiveFrom(current.getFirst(), d.oppose())) {
+                if (m.receiveFrom(current.getFirst(), d.oppose(),c)) {
                     current.removeFirst();
                 }
             }
