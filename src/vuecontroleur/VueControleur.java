@@ -73,6 +73,11 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoRotaterGauche;
     private Image icoRotaterDroite;
 
+    private Image icoRotaterInvHaut;
+    private Image icoRotaterInvBas;
+    private Image icoRotaterInvGauche;
+    private Image icoRotaterInvDroite;
+
     private Image icoTapisHautDroite;
     private Image icoTapisBasDroite;
     private Image icoTapisHautGauche;
@@ -177,6 +182,11 @@ public class VueControleur extends JFrame implements Observer {
         icoRotaterGauche = rotateIcon(icoRotaterHaut,270);
         icoRotaterDroite = rotateIcon(icoRotaterBas,90);
 
+        icoRotaterInvHaut = new ImageIcon("./data/sprites/buildings/rotater-ccw.png").getImage();
+        icoRotaterInvBas = rotateIcon(icoRotaterInvHaut,180);
+        icoRotaterInvGauche = rotateIcon(icoRotaterInvHaut,270);
+        icoRotaterInvDroite = rotateIcon(icoRotaterInvBas,90);
+
         //chargement des machines avec extention
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
         icoPainter = new ImageIcon("./data/sprites/buildings/painter.png").getImage();
@@ -280,6 +290,13 @@ public class VueControleur extends JFrame implements Observer {
                 case West -> {return icoRotaterGauche;}
                 case East -> {return icoRotaterDroite;}
             }
+        if (m instanceof RotaterInverser)
+            switch (((RotaterInverser) m).getDirection()) {
+                case North -> {return icoRotaterInvHaut;}
+                case South -> {return icoRotaterInvBas;}
+                case West -> {return icoRotaterInvGauche;}
+                case East -> {return icoRotaterInvDroite;}
+            }
         if (m instanceof Cutter)    return icoCutter;
         if (m instanceof Painter)    return icoPainter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
@@ -369,7 +386,8 @@ public class VueControleur extends JFrame implements Observer {
         menu.getBTapis().addActionListener(e -> jeu.setMachineChoisie(new Tapis()));
         menu.getBMine().addActionListener(e -> jeu.setMachineChoisie(new Mine()));
         menu.getBPoubelle().addActionListener(e -> jeu.setMachineChoisie(new Poubelle()));
-        menu.getBRotater().addActionListener(e -> jeu.setMachineChoisie(new Rotater()));
+        menu.getBRotaterD().addActionListener(e -> jeu.setMachineChoisie(new Rotater()));
+        menu.getBRotaterG().addActionListener(e -> jeu.setMachineChoisie(new RotaterInverser()));
 
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
         menu.getBPainter().addActionListener(e -> jeu.setMachineChoisie(new Painter()));

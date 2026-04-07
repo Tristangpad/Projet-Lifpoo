@@ -12,7 +12,8 @@ public class Menu extends JPanel {
     private final JButton BMine;
     private final JButton BPoubelle;
     private final JButton BTapis;
-    private final JButton BRotater;
+    private final JButton BRotaterG;
+    private final JButton BRotaterD;
     private final JButton BCutter;
     private final JButton BPainter;
 
@@ -29,7 +30,8 @@ public class Menu extends JPanel {
         ImageIcon icoTapisDroite = new ImageIcon(new ImageIcon("./data/sprites/buildings/belt_top.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
         ImageIcon icoMine = new ImageIcon(new ImageIcon("./data/sprites/buildings/miner.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
         ImageIcon icoPoubelle = new ImageIcon(new ImageIcon("./data/sprites/buildings/trash.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
-        ImageIcon icoRotater = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
+        ImageIcon icoRotaterD = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
+        ImageIcon icoRotaterG = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater-ccw.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
 
         ImageIcon icoCutter = new ImageIcon(new ImageIcon("./data/sprites/buildings/cutter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
         ImageIcon icoPainter = new ImageIcon(new ImageIcon("./data/sprites/buildings/painter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
@@ -38,7 +40,8 @@ public class Menu extends JPanel {
         BTapis = new JButton("Tapis",icoTapisDroite);
         BMine = new JButton("Mine",icoMine);
         BPoubelle = new JButton("Poubelle",icoPoubelle);
-        BRotater = new JButton("Rotater",icoRotater);
+        BRotaterG = new JButton("Rotater g",icoRotaterG);
+        BRotaterD = new JButton("Rotater d",icoRotaterD);
 
         BCutter = new JButton("Cutter",icoCutter);
         BPainter = new JButton("Painter",icoPainter);
@@ -47,7 +50,8 @@ public class Menu extends JPanel {
         configBouton(BTapis);
         configBouton(BMine);
         configBouton(BPoubelle);
-        configBouton(BRotater);
+        configBouton(BRotaterG);
+        configBouton(BRotaterD);
 
         configBouton(BCutter);
         configBouton(BPainter);
@@ -56,7 +60,8 @@ public class Menu extends JPanel {
         add(BTapis);
         add(BMine);
         add(BPoubelle);
-        add(BRotater);
+        add(BRotaterG);
+        add(BRotaterD);
 
         add(BCutter);
         add(BPainter);
@@ -67,7 +72,8 @@ public class Menu extends JPanel {
     public JButton getBTapis() { return BTapis; }
     public JButton getBMine() { return BMine; }
     public JButton getBPoubelle() { return BPoubelle; }
-    public JButton getBRotater() { return BRotater; }
+    public JButton getBRotaterG() { return BRotaterG; }
+    public JButton getBRotaterD() { return BRotaterD; }
     public JButton getBCutter() { return BCutter;}
     public JButton getBPainter() { return BPainter;}
 

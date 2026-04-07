@@ -5,7 +5,7 @@ import modele.item.ItemShape;
 
 import java.util.Random;
 
-public class Rotater extends Machine{
+public class RotaterInverser extends Machine{
 
     public void tourner() {
         d = d.suivante();
@@ -15,7 +15,7 @@ public class Rotater extends Machine{
     @Override
     public void work() {
         if (!current.isEmpty()) {
-            ((ItemShape) current.getFirst()).rotate(true);
+            ((ItemShape) current.getFirst()).rotate(false);
         }
     }
 }

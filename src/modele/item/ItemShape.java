@@ -117,20 +117,32 @@ public class ItemShape extends Item {
     }
 
 
-    public void rotate() {
-
+    public void rotate(boolean Horaire) {
         SubShape[] bufferSubShapes = new SubShape[4];
-        bufferSubShapes[0] = tabSubShapes[3];
-        bufferSubShapes [1] = tabSubShapes[0];
-        bufferSubShapes [2] = tabSubShapes[1];
-        bufferSubShapes [3] = tabSubShapes[2];
-
         Couleur[] bufferColors = new Couleur[4];
-        bufferColors[0] = tabColors[3];
-        bufferColors [1] = tabColors[0];
-        bufferColors [2] = tabColors[1];
-        bufferColors [3] = tabColors[2];
+        if( Horaire)
+        {
+            bufferSubShapes[0] = tabSubShapes[3];
+            bufferSubShapes[1] = tabSubShapes[0];
+            bufferSubShapes[2] = tabSubShapes[1];
+            bufferSubShapes[3] = tabSubShapes[2];
 
+            bufferColors[0] = tabColors[3];
+            bufferColors[1] = tabColors[0];
+            bufferColors[2] = tabColors[1];
+            bufferColors[3] = tabColors[2];
+        }else
+        {
+            bufferSubShapes[0] = tabSubShapes[1];
+            bufferSubShapes[1] = tabSubShapes[2];
+            bufferSubShapes[2] = tabSubShapes[3];
+            bufferSubShapes[3] = tabSubShapes[0];
+
+            bufferColors[0] = tabColors[1];
+            bufferColors[1] = tabColors[2];
+            bufferColors[2] = tabColors[3];
+            bufferColors[3] = tabColors[0];
+        }
         tabSubShapes = bufferSubShapes;
         tabColors = bufferColors;
 
