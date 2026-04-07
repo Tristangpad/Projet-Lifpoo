@@ -5,7 +5,7 @@ import modele.item.ItemShape;
 import modele.item.ItemColor;
 import modele.item.Couleur;
 
-public class Painter extends Machine{
+public class Painter extends Machine {
     private Couleur couleur;
 
     //item qu'attend la machine

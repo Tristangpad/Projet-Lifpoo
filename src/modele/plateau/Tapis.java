@@ -1,9 +1,6 @@
 package modele.plateau;
 
-import modele.item.Item;
-import modele.item.ItemShape;
-
-public class Tapis extends Machine{
+public class Tapis extends Machine {
 
     private Direction dirInput = null;
 

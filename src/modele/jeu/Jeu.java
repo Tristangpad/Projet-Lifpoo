@@ -4,6 +4,9 @@ package modele.jeu;
 import modele.item.ItemColor;
 import modele.plateau.*;
 import modele.item.ItemShape;
+import modele.plateau.Cutter;
+import modele.plateau.Machine;
+
 import static modele.item.Couleur.*;
 
 public class Jeu extends Thread{
@@ -41,6 +44,7 @@ public class Jeu extends Thread{
         plateau.transformeCaseEnGisement(9, 3, new  ItemShape("RbCrRrCb"));
 
         plateau.transformeCaseEnGisement(11, 3, new ItemColor(White));
+        plateau.transformeCaseEnGisement(12, 3, new ItemColor(Blue));
 
 
         plateau.setMachine(5, 10, new Mine());
@@ -65,39 +69,6 @@ public class Jeu extends Thread{
             t.setDirection(directionMachine);
             plateau.setMachine(x, y, t);
             connectionAuto(x, y);
-        }
-        else if (machineChoisie instanceof Mine)
-        { plateau.setMachine(x, y, new Mine()); }
-        else if (machineChoisie instanceof Poubelle)
-        { plateau.setMachine(x, y, new Poubelle()); }
-        else if (machineChoisie instanceof Cutter)
-        { plateau.setMachine(x, y, new Cutter()); }
-        else if (machineChoisie instanceof Rotater)
-        { plateau.setMachine(x, y, new Rotater()); }
-        else if (machineChoisie instanceof RotaterInverser)
-        { plateau.setMachine(x, y, new RotaterInverser()); }
-        else if (machineChoisie instanceof Painter)
-        { plateau.setMachine(x, y, new Painter()); }
-    }
-
-    public void slide(int x, int y) {
-        //s'occupe de liaison des tapis en cas de slide
-        if (machineChoisie instanceof Tapis) {
-            if(dernierClickX != -1 && dernierClickY != -1) {
-                //regarde le dernier click et a partir de ce dernier redeffinis l'ancien tapis pour qu'il colle au nouveau
-                Machine tapisInput = plateau.getCase(dernierClickX, dernierClickY).getMachine();
-                if (tapisInput instanceof Tapis) {
-                    ((Tapis) tapisInput).setDirection(directionMachine);
-                }
-            }
-            Tapis t = new Tapis();
-            t.setDirection(directionMachine);
-
-            if(dernierClickX != -1 && dernierClickY != -1){
-                t.setDirInput(calculLiaisonTapis(dernierClickX,dernierClickY,x,y));
-            }
-            plateau.setMachine(x, y, t);
-            connectionAuto(x, y);
             dernierClickX = x;
             dernierClickY = y;
         }
@@ -113,6 +84,66 @@ public class Jeu extends Thread{
         { plateau.setMachine(x, y, new RotaterInverser()); }
         else if (machineChoisie instanceof Painter)
         { plateau.setMachine(x, y, new Painter()); }
+        else if (machineChoisie instanceof Stacker)
+        { plateau.setMachine(x, y, new Stacker()); }
+        else if (machineChoisie instanceof Mixer)
+        { plateau.setMachine(x, y, new Mixer()); }
+    }
+
+    public void slide(int x, int y) {
+        //s'occupe de liaison des tapis en cas de slide
+        if (machineChoisie instanceof Tapis) {
+            Direction nouvelleDir;
+
+            if (dernierClickX != -1 && dernierClickY != -1) {
+                nouvelleDir = calculLiaisonTapis(dernierClickX, dernierClickY, x, y);
+                directionMachine = nouvelleDir;
+            } else {
+                nouvelleDir = directionMachine; //par défaut
+            }
+
+
+            if (dernierClickX != -1 && dernierClickY != -1) {
+                Machine tapisPrec = plateau.getCase(dernierClickX, dernierClickY).getMachine();
+                if (tapisPrec instanceof Tapis tp) {
+                    Direction ancienneDir = tp.getDirection();
+                    tp.setDirection(nouvelleDir);
+
+                    //met dirInput que si la direction change vraiment
+                    if (ancienneDir != nouvelleDir) {
+                        tp.setDirInput(ancienneDir);
+                    } else {
+                        tp.setDirInput(null);
+                    }
+                }
+            }
+
+            Tapis t = new Tapis();
+            t.setDirection(nouvelleDir);
+            t.setDirInput(null);
+
+            plateau.setMachine(x, y, t);
+            connectionAuto(x, y);
+
+            dernierClickX = x;
+            dernierClickY = y;
+        }
+        else if (machineChoisie instanceof Mine)
+        { plateau.setMachine(x, y, new Mine()); }
+        else if (machineChoisie instanceof Poubelle)
+        { plateau.setMachine(x, y, new Poubelle()); }
+        else if (machineChoisie instanceof Cutter)
+        { plateau.setMachine(x, y, new Cutter()); }
+        else if (machineChoisie instanceof Rotater)
+        { plateau.setMachine(x, y, new Rotater()); }
+        else if (machineChoisie instanceof RotaterInverser)
+        { plateau.setMachine(x, y, new RotaterInverser()); }
+        else if (machineChoisie instanceof Painter)
+        { plateau.setMachine(x, y, new Painter()); }
+        else if (machineChoisie instanceof Stacker)
+        { plateau.setMachine(x, y, new Stacker()); }
+        else if (machineChoisie instanceof Mixer)
+        { plateau.setMachine(x, y, new Mixer()); }
     }
 
     private void connectionAuto(int x, int y) {
@@ -131,32 +162,40 @@ public class Jeu extends Thread{
         Case voisinOuest = plateau.getCase(caseTapis, Direction.West);
 
         //Nord
-        if (voisinNord != null && voisinNord.getMachine() != null && !(voisinNord.getMachine() instanceof Tapis)
-                && voisinNord.getMachine().getDirection() == Direction.South && !(voisinNord.getMachine() instanceof ZoneDepot)) {
+        if (voisinNord != null && voisinNord.getMachine() != null
+                && !(voisinNord.getMachine() instanceof Tapis)
+                && !(voisinNord.getMachine() instanceof ZoneDepot)
+                && voisinNord.getMachine().getDirection() == Direction.South) {
             t.setDirInput(Direction.South);
             t.setDirection(Direction.South);
             return;
         }
 
         //Sud
-        if (voisinSud != null && voisinSud.getMachine() != null && !(voisinSud.getMachine() instanceof Tapis)
-                && voisinSud.getMachine().getDirection() == Direction.North && !(voisinSud.getMachine() instanceof ZoneDepot)) {
+        if (voisinSud != null && voisinSud.getMachine() != null
+                && !(voisinSud.getMachine() instanceof Tapis)
+                && !(voisinSud.getMachine() instanceof ZoneDepot)
+                && voisinSud.getMachine().getDirection() == Direction.North) {
             t.setDirInput(Direction.North);
             t.setDirection(Direction.North);
             return;
         }
 
         //Est
-        if (voisinEst != null && voisinEst.getMachine() != null && !(voisinEst.getMachine() instanceof Tapis)
-                && voisinEst.getMachine().getDirection() == Direction.West && !(voisinOuest.getMachine() instanceof ZoneDepot)) {
+        if (voisinEst != null && voisinEst.getMachine() != null
+                && !(voisinEst.getMachine() instanceof Tapis)
+                && !(voisinEst.getMachine() instanceof ZoneDepot)
+                && voisinEst.getMachine().getDirection() == Direction.West) {
             t.setDirInput(Direction.West);
             t.setDirection(Direction.West);
             return;
         }
 
         //Ouest
-        if (voisinOuest != null && voisinOuest.getMachine() != null && !(voisinOuest.getMachine() instanceof Tapis)
-                && voisinOuest.getMachine().getDirection() == Direction.East && !(voisinEst.getMachine() instanceof ZoneDepot)) {
+        if (voisinOuest != null && voisinOuest.getMachine() != null
+                && !(voisinOuest.getMachine() instanceof Tapis)
+                && !(voisinOuest.getMachine() instanceof ZoneDepot)
+                && voisinOuest.getMachine().getDirection() == Direction.East) {
             t.setDirInput(Direction.East);
             t.setDirection(Direction.East);
         }

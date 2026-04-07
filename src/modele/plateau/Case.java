@@ -6,9 +6,6 @@
 package modele.plateau;
 
 import modele.item.Item;
-import modele.item.ItemShape;
-import modele.item.ItemColor;
-import modele.item.Couleur;
 
 public class Case {
 
@@ -41,7 +38,7 @@ public class Case {
     }
 
     public Machine getMachine() {
-        //cas ou machine est une extention retourne donc la machine a laquel elle est attacher
+        //cas ou machine est une extention retourne donc la machine a laquel elle est attaché
         if (machine == null && machinePrincipale != null) {
             return machinePrincipale.getMachine(); //machine principale
         }

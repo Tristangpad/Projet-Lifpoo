@@ -7,19 +7,18 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import modele.item.Couleur;
 import modele.plateau.Painter;
-import vuecontroleur.Menu;
+import modele.plateau.Cutter;
 import modele.item.Item;
 import modele.item.ItemColor;
 import modele.item.ItemShape;
-import static modele.item.Couleur.*;
 import modele.jeu.Jeu;
 import modele.plateau.*;
+import modele.plateau.Machine;
 
 
 /** Cette classe a deux fonctions :
@@ -64,10 +63,14 @@ public class VueControleur extends JFrame implements Observer {
     private Image icoMineGauche;
     private Image icoMineDroite;
 
+    //machine +++
     private Image icoCutter;
     private Image icoPainter;
     private Image icoZoneDepot;
+    private Image icoStacker;
+    private Image icoMixer;
 
+    //version dans toutes les dir
     private Image icoRotaterHaut;
     private Image icoRotaterBas;
     private Image icoRotaterGauche;
@@ -190,6 +193,8 @@ public class VueControleur extends JFrame implements Observer {
         //chargement des machines avec extention
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
         icoPainter = new ImageIcon("./data/sprites/buildings/painter.png").getImage();
+        icoStacker = new ImageIcon("./data/sprites/buildings/stacker.png").getImage();
+        icoMixer = new ImageIcon("./data/sprites/buildings/mixer.png").getImage();
         icoZoneDepot = new ImageIcon("./data/sprites/buildings/hub.png").getImage();
 
     }
@@ -300,6 +305,8 @@ public class VueControleur extends JFrame implements Observer {
         if (m instanceof Cutter)    return icoCutter;
         if (m instanceof Painter)    return icoPainter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
+        if (m instanceof Mixer)    return icoMixer;
+        if (m instanceof Stacker)    return icoStacker;
         return null;
     }
 
@@ -391,6 +398,8 @@ public class VueControleur extends JFrame implements Observer {
 
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
         menu.getBPainter().addActionListener(e -> jeu.setMachineChoisie(new Painter()));
+        menu.getBStacker().addActionListener(e -> jeu.setMachineChoisie(new Stacker()));
+        menu.getBMixer().addActionListener(e -> jeu.setMachineChoisie(new Mixer()));
 
         //affichage, création et mise en page de la preview des objectifs des niveau
         niveauOverlay = new JPanel();
@@ -448,18 +457,17 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         if (mousePressed) {
-
-                            if(casePX != -1 && casePY != -1) {
-                                System.out.println("dir changer");//debug
-                                Direction dir = jeu.calculLiaisonTapis(casePX,casePY,xx,yy);
-                                jeu.setDirectionMachine(dir);//rewrite la dir de la machine si il y a une liaison avec cette dernière
-                            }
-                            //permet en cas de slide d'actualiser les liaisons
-                            casePX = xx;
-                            casePY = yy;
-                            jeu.slide(xx, yy);
-                            if (SwingUtilities.isLeftMouseButton(e)) {jeu.slide(xx, yy);}
-                            else if (SwingUtilities.isRightMouseButton(e)) {jeu.suppMachineJeu(xx, yy);}
+                            if (SwingUtilities.isLeftMouseButton(e)) {
+                                if (casePX != -1 && casePY != -1) {
+                                    System.out.println("dir changer");//debug
+                                    Direction dir = jeu.calculLiaisonTapis(casePX, casePY, xx, yy);
+                                    jeu.setDirectionMachine(dir);//rewrite la dir de la machine si il y a une liaison avec cette dernière
+                                }
+                                //permet en cas de slide d'actualiser les liaisons
+                                casePX = xx;
+                                casePY = yy;
+                                jeu.slide(xx, yy);
+                            }else if (SwingUtilities.isRightMouseButton(e)) {jeu.suppMachineJeu(xx, yy);}
                         }
                     }
 

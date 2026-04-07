@@ -1,10 +1,8 @@
 package modele.plateau;
 
 import modele.item.Item;
-import modele.item.ItemShape;
-import modele.plateau.Point;
+
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class Machine implements Runnable {
     LinkedList<Item> current;//file d'item contenue au sein d'une machine

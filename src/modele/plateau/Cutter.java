@@ -3,10 +3,7 @@ package modele.plateau;
 import modele.item.Item;
 import modele.item.ItemShape;
 
-import java.util.LinkedList;
-import java.util.Random;
-
-public class Cutter extends Machine{
+public class Cutter extends Machine {
 
     public Cutter() {
         this.dimension = new Point(2, 1); // 2 de large, 1 de haut

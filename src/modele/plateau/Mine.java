@@ -5,7 +5,6 @@ import modele.item.Item;
 import modele.item.ItemShape;
 import java.util.Random;
 import modele.item.ItemColor;
-import modele.item.Couleur;
 
 public class Mine extends Machine {
 

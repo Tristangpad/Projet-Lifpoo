@@ -14,8 +14,11 @@ public class Menu extends JPanel {
     private final JButton BTapis;
     private final JButton BRotaterG;
     private final JButton BRotaterD;
+
     private final JButton BCutter;
     private final JButton BPainter;
+    private final JButton BStacker;
+    private final JButton BMixer;
 
 
 
@@ -28,13 +31,15 @@ public class Menu extends JPanel {
 
         //importation des icônes pour le menu
         ImageIcon icoTapisDroite = new ImageIcon(new ImageIcon("./data/sprites/buildings/belt_top.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
-        ImageIcon icoMine = new ImageIcon(new ImageIcon("./data/sprites/buildings/miner.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
-        ImageIcon icoPoubelle = new ImageIcon(new ImageIcon("./data/sprites/buildings/trash.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
-        ImageIcon icoRotaterD = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
-        ImageIcon icoRotaterG = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater-ccw.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));;
+        ImageIcon icoMine = new ImageIcon(new ImageIcon("./data/sprites/buildings/miner.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
+        ImageIcon icoPoubelle = new ImageIcon(new ImageIcon("./data/sprites/buildings/trash.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
+        ImageIcon icoRotaterD = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
+        ImageIcon icoRotaterG = new ImageIcon(new ImageIcon("./data/sprites/buildings/rotater-ccw.png").getImage().getScaledInstance(82, 82, Image.SCALE_SMOOTH));
 
-        ImageIcon icoCutter = new ImageIcon(new ImageIcon("./data/sprites/buildings/cutter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
-        ImageIcon icoPainter = new ImageIcon(new ImageIcon("./data/sprites/buildings/painter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));;
+        ImageIcon icoCutter = new ImageIcon(new ImageIcon("./data/sprites/buildings/cutter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));
+        ImageIcon icoPainter = new ImageIcon(new ImageIcon("./data/sprites/buildings/painter.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));
+        ImageIcon icoStacker = new ImageIcon(new ImageIcon("./data/sprites/buildings/stacker.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));
+        ImageIcon icoMixer = new ImageIcon(new ImageIcon("./data/sprites/buildings/mixer.png").getImage().getScaledInstance(82*2, 82, Image.SCALE_SMOOTH));
 
         //création des boutons
         BTapis = new JButton("Tapis",icoTapisDroite);
@@ -45,6 +50,8 @@ public class Menu extends JPanel {
 
         BCutter = new JButton("Cutter",icoCutter);
         BPainter = new JButton("Painter",icoPainter);
+        BStacker = new JButton("Stacker",icoStacker);
+        BMixer = new JButton("Mixer",icoMixer);
 
         //config des boutons
         configBouton(BTapis);
@@ -55,6 +62,8 @@ public class Menu extends JPanel {
 
         configBouton(BCutter);
         configBouton(BPainter);
+        configBouton(BStacker);
+        configBouton(BMixer);
 
         //ajout des boutons au menue
         add(BTapis);
@@ -65,7 +74,8 @@ public class Menu extends JPanel {
 
         add(BCutter);
         add(BPainter);
-
+        add(BStacker);
+        add(BMixer);
     }
 
     //getters
@@ -76,6 +86,8 @@ public class Menu extends JPanel {
     public JButton getBRotaterD() { return BRotaterD; }
     public JButton getBCutter() { return BCutter;}
     public JButton getBPainter() { return BPainter;}
+    public JButton getBStacker() { return BStacker;}
+    public JButton getBMixer() { return BMixer;}
 
     //definits l'apparance de chaque boutton dans le menue
     private void configBouton(JButton b) {
@@ -112,7 +124,7 @@ public class Menu extends JPanel {
             }
         });
 
-        Dimension tailleBouton = new Dimension(140, 140);
+        Dimension tailleBouton = new Dimension(100, 100);
         b.setPreferredSize(tailleBouton);
     }
 }

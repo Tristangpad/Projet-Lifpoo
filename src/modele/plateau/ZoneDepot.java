@@ -3,8 +3,6 @@ package modele.plateau;
 import modele.item.Item;
 import modele.item.ItemShape;
 
-import java.util.Objects;
-
 
 public class ZoneDepot extends Machine {
 

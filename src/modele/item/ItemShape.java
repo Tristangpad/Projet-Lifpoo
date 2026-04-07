@@ -149,7 +149,14 @@ public class ItemShape extends Item {
 
     }
     public void stack(ItemShape ShapeSup) { // ShapeSup est empilé sur this
-
+        if ((tabSubShapes[1] == SubShape.None && tabSubShapes[3] == SubShape.None)
+                && (ShapeSup.tabSubShapes[0] == SubShape.None && ShapeSup.tabSubShapes[2] == SubShape.None)) {
+            //ajoute dans this la moitié droite de la forme dans l'autre input
+            tabSubShapes[1] = ShapeSup.tabSubShapes[1];
+            tabSubShapes[3] = ShapeSup.tabSubShapes[3];
+            tabColors[1]    = ShapeSup.tabColors[1];
+            tabColors[3]    = ShapeSup.tabColors[3];
+        }
     }
 
     public ItemShape Cut() { // this et l'objet retourné correpondent au deux sorties
