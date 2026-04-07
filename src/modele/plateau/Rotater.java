@@ -11,6 +11,7 @@ public class Rotater extends Machine{
         d = d.suivante();
     }
 
+    //tourne les items a 90d
     @Override
     public void work() {
         if (!current.isEmpty()) {

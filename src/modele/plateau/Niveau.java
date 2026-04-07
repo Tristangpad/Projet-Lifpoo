@@ -10,15 +10,16 @@ public class Niveau {
     private int objectif;
     private int progression;
 
-
+    //constructeur du niveau
     public Niveau(String formeDemander, int objectif) {
         this.formeDemander = formeDemander;
         this.objectif = objectif;
-        this.progression = 0;
+        this.progression = 0;//set la prog a 0
     }
 
     public String getFormeDemander() {return formeDemander;}
 
+    //si la forme demander ne correspond pas a l'item passer ne paramètre return false
     public boolean verifierItem(ItemShape item) {
         return Objects.equals(item.getConfigItem(), formeDemander);
     }
@@ -27,6 +28,7 @@ public class Niveau {
         return progression >= objectif;
     }
 
+    //getter et setter
     public int getProgression() {
         return progression;
     }

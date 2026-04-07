@@ -7,9 +7,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Machine implements Runnable {
-    LinkedList<Item> current;
-    Case c;
+    LinkedList<Item> current;//file d'item contenue au sein d'une machine
+    Case c;//case ou est poser la machine
     Direction d = Direction.North;// par défaut, pour commencer, tout est orienté au north
+    //dir de la machin sur la grille (output)
 
     private boolean aRecuCeTick = false;
 
@@ -17,6 +18,10 @@ public class Machine implements Runnable {
 
     public void setDirection(Direction dir) {
         this.d = dir;
+    }
+
+    public void tourner() {
+        d = d.suivante();
     }
 
     public Machine()
@@ -79,7 +84,7 @@ public class Machine implements Runnable {
             }
         }
     }
-
+    //getters
     public Direction getDirection() { return d; }
 
     public int getLargeur() {

@@ -34,6 +34,7 @@ public class VueControleur extends JFrame implements Observer {
     private final int sizeY;
     private static final int pxCase = 82; // nombre de pixel par case
 
+    //init de la bar de progression propre a JP
     private JProgressBar barProgression;
     private JFrame frame;
     private Menu menu;
@@ -87,6 +88,7 @@ public class VueControleur extends JFrame implements Observer {
     private boolean mousePressed = false; // permet de mémoriser l'état de la souris
     private ImagePanel[][] tabIP; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône background et front, suivant ce qui est présent dans le modèle)
 
+    //creation des differentes interfaces ajouter a la grille de base du jeux
     private JPanel menuOverlay;
     private GridBagConstraints contrainteMenu;
     private JPanel introNiveau;
@@ -95,7 +97,7 @@ public class VueControleur extends JFrame implements Observer {
     private GridBagConstraints contrainteNiveauOverlay;
     private ImagePanel niveauOverlayForme;
 
-
+    //pour calculer les liaison pour les tapis pour les ajuster
     private int casePX = -1; //par defaut
     private int casePY = -1;
 
@@ -106,16 +108,17 @@ public class VueControleur extends JFrame implements Observer {
         sizeY = plateau.SIZE_Y;
         frame = new JFrame();
 
-        chargerLesIcones();
-        placerLesComposantsGraphiques();
-        afficherIntroNiveau(jeu.getNiveauActuel(), jeu.getNumeroNiveau());
+        chargerLesIcones();//charge les icones
+        placerLesComposantsGraphiques();//place les icones
+        afficherIntroNiveau(jeu.getNiveauActuel(), jeu.getNumeroNiveau());//crée un pop up temporaire a chaque début de niveau
 
         plateau.addObserver(this);
 
-
         mettreAJourAffichage();
     }
-
+    /*
+    Fonction créant une nouvelle image apartir de li'mage passr en paramètre en fonction de la rotation demander
+     */
     public static Image rotateIcon(Image img, double angle) {
         //trouver sur internet
         int w = img.getWidth(null);
@@ -135,6 +138,7 @@ public class VueControleur extends JFrame implements Observer {
 
     private void chargerLesIcones() {
 
+        //tapis droits puis tapis pour liaison en coude
         icoTapisHaut = new ImageIcon("./data/sprites/buildings/belt_top.png").getImage();
         icoTapisBas = rotateIcon(icoTapisHaut,180);
         icoTapisGauche = rotateIcon(icoTapisHaut,270);
@@ -160,6 +164,7 @@ public class VueControleur extends JFrame implements Observer {
         icoBlanc = new ImageIcon("./data/sprites/colors/white.png").getImage();
         icoJaune = new ImageIcon("./data/sprites/colors/yellow.png").getImage();
 
+        //chargement des machines
         icoPoubelle = new ImageIcon("./data/sprites/buildings/trash.png").getImage();
 
         icoMineHaut = new ImageIcon("./data/sprites/buildings/miner.png").getImage();
@@ -172,7 +177,7 @@ public class VueControleur extends JFrame implements Observer {
         icoRotaterGauche = rotateIcon(icoRotaterHaut,270);
         icoRotaterDroite = rotateIcon(icoRotaterBas,90);
 
-        //machine avec extention
+        //chargement des machines avec extention
         icoCutter = new ImageIcon("./data/sprites/buildings/cutter.png").getImage();
         icoPainter = new ImageIcon("./data/sprites/buildings/painter.png").getImage();
         icoZoneDepot = new ImageIcon("./data/sprites/buildings/hub.png").getImage();
@@ -180,6 +185,7 @@ public class VueControleur extends JFrame implements Observer {
     }
 
     private Image getIconeColor(Couleur c) {
+        //pour la partie graphique renvoie l'image assossier a chaque couleur
         switch (c) {
             case Red -> {
                 return icoRouge;
@@ -208,7 +214,10 @@ public class VueControleur extends JFrame implements Observer {
         }
     }
 
+
     private Image getIconeMachine(Machine m) {
+        //pour chaque machine renvoie sont icones approprié
+        //pour les tapis cel aest fait en fonction de leurs entré et sorite
         if (m instanceof Tapis) {
             Direction sortie = ((Tapis) m).getDirection();
             Direction entree = ((Tapis) m).getDirInput();
@@ -231,7 +240,7 @@ public class VueControleur extends JFrame implements Observer {
                     }
                 }
             }
-
+            //double switch pour liée en fonction de l'entree a la sortie
             switch (entree) {
                 case North -> {switch (sortie) {
                                 case East  -> {return icoTapisHautDroite;}
@@ -271,23 +280,25 @@ public class VueControleur extends JFrame implements Observer {
                 case West -> {return icoRotaterGauche;}
                 case East -> {return icoRotaterDroite;}
             }
-
         if (m instanceof Cutter)    return icoCutter;
         if (m instanceof Painter)    return icoPainter;
         if (m instanceof ZoneDepot) return icoZoneDepot;
         return null;
     }
 
+
     public void afficherIntroNiveau(Niveau n,int numNiveau) {
+        //definitions de l'intro que l'ont voit a chaque début de niveau
         if(introNiveau != null){
             menuOverlay.remove(introNiveau);
         }
+        menu.setVisible(false);//sinon l'ont voix le menue des machins au dessus de l'overlay d'intro
 
-        menu.setVisible(false);
         if (introNiveau != null) introNiveau.setVisible(false);
 
         introNiveau = new NiveauAfficher(n,numNiveau);
 
+        //occupe toutes la place
         contrainteNiveau = new GridBagConstraints();
         contrainteNiveau.gridx = 0;
         contrainteNiveau.gridy = 0;
@@ -295,12 +306,15 @@ public class VueControleur extends JFrame implements Observer {
         contrainteNiveau.weighty = 1;
         contrainteNiveau.fill = GridBagConstraints.BOTH;
 
+        //ajout de layer a la grille principale
         menuOverlay.add(introNiveau, contrainteNiveau);
         menuOverlay.revalidate();
         menuOverlay.repaint();
     }
 
+
     public void mettreAJourNiveauOverlay(Niveau n) {
+        //pour tous les niveau après le premier
         if (n != null) {
             niveauOverlayForme.setShape(new ItemShape(n.getFormeDemander()));
             niveauOverlayForme.repaint();
@@ -318,7 +332,7 @@ public class VueControleur extends JFrame implements Observer {
         menuOverlay = (JPanel) getGlassPane();
         menuOverlay.setLayout(new GridBagLayout());
 
-        barProgression = new JProgressBar(0,100);
+        barProgression = new JProgressBar(0,100);//bar de progression
 
         grilleIP = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
         tabIP = new ImagePanel[sizeX][sizeY];
@@ -327,7 +341,7 @@ public class VueControleur extends JFrame implements Observer {
 
         //mise en forme du menue de choix de machine
         contrainteMenu = new GridBagConstraints();
-        contrainteMenu.anchor = GridBagConstraints.SOUTH;
+        contrainteMenu.anchor = GridBagConstraints.SOUTH;//point d'attache
         contrainteMenu.weighty = 1.0;
         contrainteMenu.fill = GridBagConstraints.HORIZONTAL;
         contrainteMenu.ipadx = 10;
@@ -366,11 +380,12 @@ public class VueControleur extends JFrame implements Observer {
         niveauOverlay.setBackground(new Color(0, 0, 0, 150));
         niveauOverlay.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-
+        //definitions de la preview des formes a données
         JLabel labelObjectif = new JLabel("Objectif :");
         labelObjectif.setForeground(Color.WHITE);
         labelObjectif.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        //mise en forme de la preview
         niveauOverlayForme = new ImagePanel();
         niveauOverlayForme.setPreferredSize(new Dimension(80, 80));
         niveauOverlayForme.setMaximumSize(new Dimension(80, 80));
@@ -417,10 +432,11 @@ public class VueControleur extends JFrame implements Observer {
                         if (mousePressed) {
 
                             if(casePX != -1 && casePY != -1) {
-                                System.out.println("dir changer");
+                                System.out.println("dir changer");//debug
                                 Direction dir = jeu.calculLiaisonTapis(casePX,casePY,xx,yy);
-                                jeu.setDirectionMachine(dir);
+                                jeu.setDirectionMachine(dir);//rewrite la dir de la machine si il y a une liaison avec cette dernière
                             }
+                            //permet en cas de slide d'actualiser les liaisons
                             casePX = xx;
                             casePY = yy;
                             jeu.slide(xx, yy);
@@ -432,6 +448,7 @@ public class VueControleur extends JFrame implements Observer {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         mousePressed = true;
+
                         if (SwingUtilities.isRightMouseButton(e)) {
                             jeu.suppMachineJeu(xx, yy);
                         }
@@ -464,7 +481,7 @@ public class VueControleur extends JFrame implements Observer {
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabIP)
      */
     private void mettreAJourAffichage() {
-
+        //redessine la grille vierge
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 tabIP[x][y].setBackground((Image) null);
@@ -473,25 +490,27 @@ public class VueControleur extends JFrame implements Observer {
                 tabIP[x][y].resetPartie();
             }
         }
-
+        //dessine la grille actualiser
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
 
                 Case c = plateau.getCases()[x][y];
                 Machine m = c.getMachine();
 
+                //si la machine est une extention d'une autre alors ont skip la case
                 if (c.isExtention()) {
                     continue;
                 }
 
                 if (m != null) {
-
+                    //get l'image pour chaque case
                     Image ico = getIconeMachine(m);
-
+                    //cas pour machine avec extention
                     if (m.getLargeur() > 1 || m.getHauteur() > 1) {
                         for (int xx = 0; xx < m.getLargeur(); xx++) {
                             for (int yy = 0; yy < m.getHauteur(); yy++) {
                                 if (x + xx < sizeX && y + yy < sizeY) {
+                                    //on dessinr chaque partie de la machine case par case
                                     tabIP[x + xx][y + yy].setPartie(xx, m.getLargeur(), yy, m.getHauteur());
                                     tabIP[x + xx][y + yy].setBackground(ico);
                                 }
@@ -499,11 +518,12 @@ public class VueControleur extends JFrame implements Observer {
                         }
                     } else {
                         if (m instanceof Tapis tapis) {
+                            //re set des dir pour les tapis
                             tapis.setDirection(tapis.getDirection());
                         }
                         tabIP[x][y].setBackground(ico);
                     }
-
+                    //draw des items (forme et couleur)
                     Item current = m.getCurrent();
 
                     if (current instanceof ItemShape) {
@@ -517,6 +537,7 @@ public class VueControleur extends JFrame implements Observer {
 
 
                 }
+                //gisement de forme ou couleur
                 Item gisement = c.getGisement();
                 if (gisement != null) {
                     if (gisement instanceof ItemShape) {
@@ -526,10 +547,10 @@ public class VueControleur extends JFrame implements Observer {
                     }
 
                 }
-
+                //affichage de la bar de progression
                 Niveau n = jeu.getNiveauActuel();
                 if (n != null) {
-                    int progression = n.getProgression() * 100 / n.getObjectif();
+                    int progression = n.getProgression() * 100 / n.getObjectif();//ratio sur 100
                     barProgression.setValue(progression);
                     barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1) + " — " + progression + "%" + " | Objectif : " + n.getObjectif());
 

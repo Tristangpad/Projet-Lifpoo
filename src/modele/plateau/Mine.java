@@ -14,10 +14,12 @@ public class Mine extends Machine {
     @Override
     public void work() { // TODO : modifier, suivant le gisement (fais)
         Item gisement = c.getGisement();
+        //si la mine est sur un gisement de Forme
         if(gisement instanceof ItemShape gisementShape){
             if (!isFull() && new Random().nextInt(4) == 0 && gisementShape != null) {
                 current.add(new ItemShape( (gisementShape).getConfigItem() ));
             }
+        //si la mine est sur un gisement de Couleur
         } else if (gisement instanceof ItemColor gisementColor) {
             if (!isFull() && new Random().nextInt(4) == 0 && gisementColor != null) {
                 current.add(new ItemColor(gisementColor.getColor()));

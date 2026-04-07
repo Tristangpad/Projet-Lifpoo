@@ -1,6 +1,7 @@
 package modele.plateau;
 
 public class Point {
+    //permet de definir une coordonnée et de l'utiliser pour des opérations ou des sauvegardes
     public  int x;
     public  int y;
 

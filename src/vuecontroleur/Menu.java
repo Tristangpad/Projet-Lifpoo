@@ -88,7 +88,7 @@ public class Menu extends JPanel {
         b.setContentAreaFilled(true);
         b.setOpaque(true);
 
-        //effet hover
+        //effet d'hover
         b.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 b.setBackground(new Color(70, 70, 70)); //plus clair si survolé

@@ -9,6 +9,7 @@ public class Tapis extends Machine{
 
     public void setDirInput(Direction d) { this.dirInput = d; }
 
+    //pour savoir a quoi le tapis doit se connecter en priorité
     public Direction getDirInput() { return dirInput; }
 
     public void tourner() {

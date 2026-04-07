@@ -121,28 +121,28 @@ public class Jeu extends Thread{
 
         //Nord
         if (voisinNord != null && voisinNord.getMachine() != null && !(voisinNord.getMachine() instanceof Tapis) && voisinNord.getMachine().getDirection() == Direction.South) {
-            t.setDirInput(Direction.North);
+            t.setDirInput(Direction.South);
             t.setDirection(Direction.South);
             return;
         }
 
         //Sud
         if (voisinSud != null && voisinSud.getMachine() != null && !(voisinSud.getMachine() instanceof Tapis) && voisinSud.getMachine().getDirection() == Direction.North) {
-            t.setDirInput(Direction.South);
+            t.setDirInput(Direction.North);
             t.setDirection(Direction.North);
             return;
         }
 
         //Est
         if (voisinEst != null && voisinEst.getMachine() != null && !(voisinEst.getMachine() instanceof Tapis) && voisinEst.getMachine().getDirection() == Direction.West) {
-            t.setDirInput(Direction.East);
+            t.setDirInput(Direction.West);
             t.setDirection(Direction.West);
             return;
         }
 
         //Ouest
         if (voisinOuest != null && voisinOuest.getMachine() != null && !(voisinOuest.getMachine() instanceof Tapis) && voisinOuest.getMachine().getDirection() == Direction.East) {
-            t.setDirInput(Direction.West);
+            t.setDirInput(Direction.East);
             t.setDirection(Direction.East);
         }
     }

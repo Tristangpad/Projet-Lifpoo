@@ -17,6 +17,7 @@ public class ImagePanel extends JPanel {
     private int dimentionTotalX = 1;
     private int dimentionTotalY = 1;
 
+    //si jamais une machine a une dim supp a 1:1 elle est découpr en partie
     public void setPartie(int partX, int totalX,int partY, int totalY) {
         this.dimentionPartX = partX;
         this.dimentionTotalX = totalX;
@@ -77,7 +78,7 @@ public class ImagePanel extends JPanel {
             }else {
                 int largeurP = imgBackground.getWidth(null)/dimentionTotalX;
                 int hauteurP = imgBackground.getHeight(null)/dimentionTotalY; //image deja charger donc ont met null a lieu de this (sensé avertir le panel)
-
+                //chaque case a sa propre partie, si parfois la mahcine est de 1 par 1 alors elle sra juste dessiner en une fois sur une case sinon...
                 g.drawImage(imgBackground,
                         xBack, yBack, xBack + widthBack, yBack + heigthBack,
                         dimentionPartX*largeurP,dimentionPartY*hauteurP,

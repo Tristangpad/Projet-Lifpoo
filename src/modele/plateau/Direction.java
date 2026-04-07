@@ -9,7 +9,7 @@ public enum Direction {
         dx = _dx;
         dy = _dy;
     }
-
+    //si appeller la dir de la machine tourne dans le sens des aiguilles d'une montre
     public Direction suivante() {
         return switch(this) {
             case North -> East;
@@ -18,7 +18,7 @@ public enum Direction {
             case East -> South;
         };
     }
-
+    //renvoie l'opposer de la dir actuelle
     public Direction oppose() {
         return switch (this) {
             case North -> South;

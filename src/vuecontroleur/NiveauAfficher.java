@@ -21,7 +21,7 @@ public class NiveauAfficher extends JPanel {
 
     public NiveauAfficher(Niveau n, int numeroNiveau) {
         setLayout(new GridBagLayout());
-        setBackground(new Color(0, 0, 0, 150)); // fond semi-transparent
+        setBackground(new Color(0, 0, 0, 150));
         setOpaque(false);//sinon la partie opaque n recouvre pas tous
 
         JPanel contenu = new JPanel();
@@ -29,39 +29,40 @@ public class NiveauAfficher extends JPanel {
         contenu.setBackground(new Color(255, 255, 255, 220));
         contenu.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        // titre
+        //titre
         labelNiveau = new JLabel("Niveau " + (numeroNiveau + 1));
         labelNiveau.setFont(new Font("Arial", Font.BOLD, 28));
         labelNiveau.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // objectif texte
+        //objectif texte
         labelObjectif = new JLabel("Produire " + n.getObjectif() + " x " + n.getFormeDemander());
         labelObjectif.setFont(new Font("Arial", Font.PLAIN, 16));
         labelObjectif.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // aperçu de la forme
+        //forme preview
         formeObjectif = new ImagePanel();
         formeObjectif.setShape(new ItemShape(n.getFormeDemander()));
         formeObjectif.setPreferredSize(new Dimension(80, 80));
         formeObjectif.setMaximumSize(new Dimension(80, 80));
         formeObjectif.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // bouton commencer
+        //bouton pr commencer
         btnCommencer = new JButton("Commencer !");
         btnCommencer.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnCommencer.setFont(new Font("Arial", Font.BOLD, 14));
-        btnCommencer.addActionListener(e -> {
+        btnCommencer.addActionListener(e ->
+        {
             Container parent = getParent();
             parent.remove(this);
-
+            //pour chaque cas de c l'ont obitens sont parent
             for (Component c : parent.getComponents()) {
                 c.setVisible(true);
             }
 
             parent.revalidate();
             parent.repaint();
-        });
-
+        }
+        );
 
         contenu.add(Box.createVerticalStrut(10));
         contenu.add(labelNiveau);

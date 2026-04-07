@@ -4,8 +4,8 @@ public class ItemShape extends Item {
 
     private String configurationItem;
 
-    private SubShape[] tabSubShapes;
-    private Couleur[] tabColors;
+    private SubShape[] tabSubShapes;//stockage des formes pour chaqu'un des 4 subshape
+    private Couleur[] tabColors;//stockage des couleurs pour chaqu'un des 4 subcolor
     public enum Layer {one, two, three};
 
 
@@ -76,29 +76,43 @@ public class ItemShape extends Item {
 
 
     public ItemShape[] couper(){
-
+        //fonction pour le cutter
+        //prends les formes et couleurs de la shape de base, les sépares et crée deux nouvelles combler par du vide : "--"
         String moitierDroite = ""+ adapterShape(tabSubShapes[0]) + adapterCouleur(tabColors[0]) + adapterShape(tabSubShapes[2]) + adapterCouleur(tabColors[2]) + "--"  + "--";
         String moitierGauche = "--" + "--" + adapterShape(tabSubShapes[1]) + adapterCouleur(tabColors[1]) + adapterShape(tabSubShapes[3]) + adapterCouleur(tabColors[3]) + "";
 
         //debug
-        System.out.println(moitierGauche);
-        System.out.println(moitierDroite);
+        //System.out.println(moitierGauche);
+        //System.out.println(moitierDroite);
 
+        //pour pouvoir ensuite ajouter au current de la machine
         ItemShape itemConteneur[] = new ItemShape[] {new ItemShape(moitierGauche),new ItemShape(moitierDroite)};
         return itemConteneur;
     }
 //TODO : finir les diff cas
+    //pour recrée une forme en fonction de l'input il faut la déconstruire
+    /*
+    Prends un subshape en paraètre.
+    Retourne un string pour pouvoir reconstruire une forme derrière avec le string
+     */
     public String adapterShape(SubShape s){
         if(s == SubShape.Carre)return "C";
+        if(s == SubShape.Circle)return "R";
+        if(s == SubShape.Fan)return "F";
+        if(s == SubShape.Star)return "S";
         if(s == SubShape.None)return "-";
         return "-";
     }
 
+    //pareil que pour adapterShape mais pour la couleur de la subshape
     public String adapterCouleur(Couleur c){
         if(c == Couleur.Red)return "r";
         if(c == Couleur.White)return "b";
+        if(c == Couleur.Green)return "g";
+        if(c == Couleur.Blue)return "b";
         if(c == Couleur.Yellow)return "y";
-        if(c == Couleur.Cyan)return "c";
+        if(c == Couleur.Purple)return "p";
+        if(c == Couleur.Cyan)return "y";
         return "-";
     }
 
@@ -133,7 +147,7 @@ public class ItemShape extends Item {
     public void Color(Couleur c) {
 
     }
-
+    //peint la shubshape de la couleur en paramètre
     public void paint(Couleur c) {
         for (int i = 0; i < 4; i++) {
             if (tabSubShapes[i] != SubShape.None) {
@@ -141,8 +155,6 @@ public class ItemShape extends Item {
             }
         }
     }
-
-
-
+    //retourn eune chaine de caratère qui est composé des subshape et des subcolor
     public String getConfigItem() { return configurationItem; }
 }
