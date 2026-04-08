@@ -25,7 +25,7 @@ public class Menu extends JPanel {
     public Menu() {
 
         //mise en forme du menue
-        setBackground(new Color(30, 30, 30, 200));
+        setBackground(new Color(100, 100, 100, 200));
         setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         setLayout(new FlowLayout(FlowLayout.CENTER, 8, 8));
 
@@ -95,7 +95,7 @@ public class Menu extends JPanel {
         b.setHorizontalTextPosition(SwingConstants.CENTER);
 
         //style sombre
-        b.setBackground(new Color(45, 45, 45));
+        b.setBackground(new Color(90, 90, 90));
         b.setForeground(new Color(220, 220, 220));
         b.setFont(new Font("Arial", Font.BOLD, 11));
         b.setBorder(BorderFactory.createCompoundBorder(

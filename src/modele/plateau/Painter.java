@@ -18,16 +18,20 @@ public class Painter extends Machine {
     }
 
     @Override
-    public boolean receiveFrom(Item item, Direction dir) {
-        //definitions des input de la machine
-        if (dir == Direction.West && item instanceof ItemShape is) {
+    public boolean receiveFrom(Item item, Direction dir, Case input) {
+        Point posInput  = c.plateau.getPosition(input);
+        Point posMachine = c.plateau.getPosition(c);
+
+        //entrée gauche
+        if (posInput.x == posMachine.x - 1 && dir == Direction.West && item instanceof ItemShape is) {
             if (shapeEnAttente != null) return false;
             shapeEnAttente = is;
             return true;
         }
-        if (dir == Direction.North && item instanceof ItemColor ic) {
+        //entrée couleur depuis le nord de la case secondaire
+        if (posInput.x == posMachine.x + 1 && dir == Direction.North && item instanceof ItemColor cl) {
             if (colorEnAttente != null) return false;
-            colorEnAttente = ic;
+            colorEnAttente = cl;
             return true;
         }
         return false;
@@ -64,7 +68,7 @@ public class Painter extends Machine {
         //envoie de la forme
         Machine m = caseActuelle.getMachine();
         if (m != null && !m.isFull()) {
-            if (m.receiveFrom(current.getFirst(), Direction.West)) {
+            if (m.receiveFrom(current.getFirst(), Direction.West,c)) {
                 current.removeFirst();
             }
         }

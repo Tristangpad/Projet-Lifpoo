@@ -27,25 +27,35 @@ public class Jeu extends Thread{
             //liste et créations des differents niveaux présent dans le jeux, possible d'en crées des aléatoires par la suite
             new Niveau("CrCrCrCr", 3),
             new Niveau("CrCr----", 3),
-            new Niveau("------Cr", 5),
+            new Niveau("CrCrCbCb", 3),
+
+            //new Niveau("------Cr", 5),
     };
 
     public Jeu() {
         //inti du jeux, du placement des gisements et des niveaux
         plateau = new Plateau();
 
-        plateau.transformeCaseEnGisement(4,10, new ItemShape("CrCr----"));
-        plateau.transformeCaseEnGisement(5,10, new ItemShape("Cr----Cr"));
-        plateau.transformeCaseEnGisement(3,10, new ItemShape("CrCrCrCr"));
-        plateau.transformeCaseEnGisement(3,3, new ItemShape("CrCrCbCr"));
-        plateau.transformeCaseEnGisement(5, 3, new ItemShape("RrRrRrRr"));
-        plateau.transformeCaseEnGisement(6,3, new ItemShape("SpSpSpSp"));
-        plateau.transformeCaseEnGisement(7,3, new ItemShape("FbFbFbFb"));
-        plateau.transformeCaseEnGisement(8, 3, new  ItemShape("RrCrRrCr"));
-        plateau.transformeCaseEnGisement(9, 3, new  ItemShape("RbCrRrCb"));
+        plateau.transformeCaseEnGisement(20,28, new ItemShape("CrCr----"));
+        plateau.transformeCaseEnGisement(21,28, new ItemShape("Cr----Cr"));
+        plateau.transformeCaseEnGisement(22,28, new ItemShape("CrCrCrCr"));
+        plateau.transformeCaseEnGisement(23,28, new ItemShape("CrCrCbCr"));
+        plateau.transformeCaseEnGisement(24, 28, new ItemShape("RrRrRrRr"));
+        plateau.transformeCaseEnGisement(25,28, new ItemShape("SpSpSpSp"));
+        plateau.transformeCaseEnGisement(26,28, new ItemShape("FbFbFbFb"));
+        plateau.transformeCaseEnGisement(27, 28, new  ItemShape("RrCrRrCr"));
+        plateau.transformeCaseEnGisement(28, 28, new  ItemShape("RbCrRrCb"));
 
-        plateau.transformeCaseEnGisement(11, 3, new ItemColor(White));
-        plateau.transformeCaseEnGisement(12, 3, new ItemColor(Blue));
+        plateau.transformeCaseEnGisement(20, 18, new ItemColor(White));
+        plateau.transformeCaseEnGisement(21, 18, new ItemColor(Blue));
+        plateau.transformeCaseEnGisement(22, 18, new ItemColor(Yellow));
+        plateau.transformeCaseEnGisement(23, 18, new ItemColor(Red));
+        plateau.transformeCaseEnGisement(24, 18, new ItemColor(Purple));
+        plateau.transformeCaseEnGisement(25, 18, new ItemColor(Green));
+        plateau.transformeCaseEnGisement(25, 18, new ItemColor(Cyan));
+        plateau.transformeCaseEnGisement(26, 18, new ItemColor(None));
+
+
 
 
         plateau.setMachine(5, 10, new Mine());
@@ -53,6 +63,7 @@ public class Jeu extends Thread{
         plateau.setMachine(3, 10, new Mine());
         plateau.setMachine(3, 5, new Poubelle());
 
+        plateau.genererGisementsAleatoires(100);
         chargerNiveau(numeroNiveau);
 
         start();
@@ -157,10 +168,16 @@ public class Jeu extends Thread{
         if (t.getDirInput() != null) return;
 
         //définit les 4 endroits a check pour un tapis
-        Case voisinNord  = plateau.getCase(caseTapis, Direction.North);
-        Case voisinSud   = plateau.getCase(caseTapis, Direction.South);
-        Case voisinEst   = plateau.getCase(caseTapis, Direction.East);
+        Case voisinNord = plateau.getCase(caseTapis, Direction.North);
+        Case voisinSud = plateau.getCase(caseTapis, Direction.South);
+        Case voisinEst = plateau.getCase(caseTapis, Direction.East);
         Case voisinOuest = plateau.getCase(caseTapis, Direction.West);
+
+        //machine avec extension souvent avec plusieurs entrées ou input exclue car trop compliquer a gérer
+        if (voisinNord != null && estMachineExclue(voisinNord.getMachine())) return;
+        if (voisinSud != null && estMachineExclue(voisinSud.getMachine())) return;
+        if (voisinEst != null && estMachineExclue(voisinEst.getMachine())) return;
+        if (voisinOuest!= null && estMachineExclue(voisinOuest.getMachine()))return;
 
         //Nord
         if (voisinNord != null && voisinNord.getMachine() != null
@@ -211,9 +228,9 @@ public class Jeu extends Thread{
         //même structure que connectionAuto mais actualise les tapis une fois placr avec un appelle a connectionAuto a chaque fois
         Case source = plateau.getCase(x, y);
 
-        Case voisinNord  = plateau.getCase(source, Direction.North);
-        Case voisinSud   = plateau.getCase(source, Direction.South);
-        Case voisinEst   = plateau.getCase(source, Direction.East);
+        Case voisinNord = plateau.getCase(source, Direction.North);
+        Case voisinSud = plateau.getCase(source, Direction.South);
+        Case voisinEst = plateau.getCase(source, Direction.East);
         Case voisinOuest = plateau.getCase(source, Direction.West);
 
         //Nord
@@ -239,6 +256,10 @@ public class Jeu extends Thread{
             Point pos = plateau.getPosition(voisinOuest);
             if (pos != null) connectionAuto(pos.x, pos.y);
         }
+    }
+
+    private boolean estMachineExclue(Machine m) {
+        return m instanceof ZoneDepot || m instanceof Painter || m instanceof Stacker || m instanceof Mixer || m instanceof Cutter;
     }
 
     public Direction calculLiaisonTapis(int x1, int y1,int x2, int y2) {
@@ -274,16 +295,20 @@ public class Jeu extends Thread{
         //a la création d'une partie charge le premier niveau via le tab contenant les niveaux
         // et une nouvlle Zone de Dépot est crée avec le bon l'objectif du niveau 1
         niveauActuel = NIVEAU[num];
-        plateau.setMachine(9, 6, new ZoneDepot(niveauActuel));
+        plateau.setMachine(24, 24, new ZoneDepot(niveauActuel));
     }
 
     public void niveauSuivant() {
         //permet d epasser au niveau suivant en augmentant le num de niveau
-        if (numeroNiveau < NIVEAU.length - 1) {
-            numeroNiveau++;
+        numeroNiveau++;
+        if (numeroNiveau < NIVEAU.length) {
             niveauActuel = NIVEAU[numeroNiveau];
-            plateau.setNiveauActuel(niveauActuel);
+
+        } else {
+            int objectif = 10 + (numeroNiveau * 5); //de plus en plus grand
+            niveauActuel = Niveau.genereNiveauRandom(objectif);
         }
+        plateau.setNiveauActuel(niveauActuel);
     }
 
     //getters

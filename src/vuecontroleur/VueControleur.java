@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
@@ -48,6 +49,7 @@ public class VueControleur extends JFrame implements Observer {
     private JComponent grilleIP;
     private JPanel conteneurCamera;
 
+    private MouseWheelListener zoomListener;
     private boolean mousePressed = false;
     private ImagePanel[][] tabIP;
 
@@ -204,7 +206,7 @@ public class VueControleur extends JFrame implements Observer {
                         casePY = -1;
                     }
                 });
-
+                iP.addMouseWheelListener(zoomListener);
                 grilleIP.add(iP);
             }
         }
@@ -214,6 +216,7 @@ public class VueControleur extends JFrame implements Observer {
     }
 
     private Image getIconeColor(Couleur c) {
+        //renvoie l'icone de la couleur passer en para
         return switch (c) {
             case Red    -> icoRouge;
             case White  -> icoBlanc;
@@ -222,11 +225,12 @@ public class VueControleur extends JFrame implements Observer {
             case Green  -> icoVert;
             case Purple -> icoViolet;
             case Yellow -> icoJaune;
-            default     -> icoGris;
+            case None -> icoGris;
         };
     }
 
     private Image getIconeMachine(Machine m) {
+        //renvoie l'icone de la machine passer en para
         if (m instanceof Tapis t) {
             Direction sortie = t.getDirection();
             Direction entree = t.getDirInput();
@@ -291,6 +295,9 @@ public class VueControleur extends JFrame implements Observer {
     }
 
     public void afficherIntroNiveau(Niveau n, int numNiveau) {
+        //affiche une popup au début de chaque nouveau niveau
+
+        //tant que le bouton )pour commencer le niveau n'est pas cliquer la pop up reste afficher
         if (introNiveau != null) {
             menuOverlay.remove(introNiveau);
             introNiveau.setVisible(false);
@@ -298,7 +305,7 @@ public class VueControleur extends JFrame implements Observer {
         menu.setVisible(false);
 
         introNiveau = new NiveauAfficher(n, numNiveau);
-
+        //mise en forme
         GridBagConstraints contrainteNiveau = new GridBagConstraints();
         contrainteNiveau.gridx = 0;
         contrainteNiveau.gridy = 0;
@@ -306,12 +313,14 @@ public class VueControleur extends JFrame implements Observer {
         contrainteNiveau.weighty = 1;
         contrainteNiveau.fill = GridBagConstraints.BOTH;
 
+        //ajout a l'interface principale
         menuOverlay.add(introNiveau, contrainteNiveau);
         menuOverlay.revalidate();
         menuOverlay.repaint();
     }
 
     public void mettreAJourNiveauOverlay(Niveau n) {
+        //refresh en cas de passage au niveau suivant
         if (n != null) {
             niveauOverlayForme.setShape(new ItemShape(n.getFormeDemander()));
             niveauOverlayForme.repaint();
@@ -330,7 +339,7 @@ public class VueControleur extends JFrame implements Observer {
 
         barProgression = new JProgressBar(0, 100);
         barProgression.setStringPainted(true);
-        barProgression.setBackground(new Color(30, 30, 30));
+        barProgression.setBackground(new Color(90, 90, 90));
         barProgression.setForeground(new Color(100, 180, 100));
         add(barProgression, BorderLayout.NORTH);
 
@@ -416,6 +425,20 @@ public class VueControleur extends JFrame implements Observer {
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS,   0), "zoomIn");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "zoomOut");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,    0), "zoomOut");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS,    0), "zoomOut");
+        //molette pour zoom
+        MouseWheelListener zoomListener = e -> {
+            if (e.getWheelRotation() < 0) {
+                camera.zoomer();//molette avant
+                appliquerZoom();
+            } else {
+                camera.dezoomer();//molette arrière
+                appliquerZoom();
+            }
+        };
+        addMouseWheelListener(zoomListener);
+        conteneurCamera.addMouseWheelListener(zoomListener);
+        grilleIP.addMouseWheelListener(zoomListener);
 
         am.put("gauche",  new AbstractAction() { public void actionPerformed(java.awt.event.ActionEvent e) {
             camera.deplacer(-1, 0, plateauSizeX, plateauSizeY, viewSizeX, viewSizeY); mettreAJourAffichage(); }});
@@ -478,13 +501,13 @@ public class VueControleur extends JFrame implements Observer {
                     }
 
                     Item current = m.getCurrent();
-                    if (current instanceof ItemShape s)       tabIP[vx][vy].setShape(s);
-                    else if (current instanceof ItemColor cl) tabIP[vx][vy].setFront(getIconeColor(cl.getColor()));
-                    else                                      tabIP[vx][vy].supprimeShape();
+                    if (current instanceof ItemShape s)tabIP[vx][vy].setShape(s);
+                    else if (current instanceof ItemColor cl)tabIP[vx][vy].setFront(getIconeColor(cl.getColor()));
+                    else tabIP[vx][vy].supprimeShape();
                 }
 
                 Item gisement = c.getGisement();
-                if (gisement instanceof ItemShape s)       tabIP[vx][vy].setShape(s);
+                if (gisement instanceof ItemShape s)tabIP[vx][vy].setShape(s);
                 else if (gisement instanceof ItemColor cl) tabIP[vx][vy].setFront(getIconeColor(cl.getColor()));
 
                 tabIP[vx][vy].repaint();
@@ -495,8 +518,7 @@ public class VueControleur extends JFrame implements Observer {
         if (n != null) {
             int progression = n.getProgression() * 100 / n.getObjectif();
             barProgression.setValue(progression);
-            barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1)
-                    + " — " + progression + "% | Objectif : " + n.getObjectif());
+            barProgression.setString("Niveau " + (jeu.getNumeroNiveau() + 1) + " — " + progression + "% | Objectif : " + n.getObjectif());
             mettreAJourNiveauOverlay(n);
         }
 

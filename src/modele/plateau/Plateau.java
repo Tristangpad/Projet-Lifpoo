@@ -7,10 +7,11 @@ package modele.plateau;
 
 
 
-import modele.item.Item;
+import modele.item.*;
 
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Random;
 
 
 public class Plateau extends Observable implements Runnable {
@@ -108,8 +109,11 @@ public class Plateau extends Observable implements Runnable {
         if (m instanceof Mine mine) {
             mine.tourner();
         }
-        if (m instanceof Rotater rotater)
+        if (m instanceof Rotater rotater){
             rotater.tourner();
+        }
+        if (m instanceof Rotater rotaterInverser){
+            rotaterInverser.tourner();
         }
 
         setChanged();
@@ -124,6 +128,49 @@ public class Plateau extends Observable implements Runnable {
         notifyObservers();
     }
 
+    public void genererGisementsAleatoires(int n) {
+        int count = 0;
+
+        while (count < n) {
+            int x = new Random().nextInt(SIZE_X);
+            int y = new Random().nextInt(SIZE_Y);
+
+            // vérifie que la case est vide
+            if (grilleCases[x][y].getGisement() == null) {
+                grilleCases[x][y].setGisement(genererItemAleatoire(new Random()));
+                count++;
+            }
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    private Item genererItemAleatoire(Random random) {
+        //80% chance de forme et 20% chance de couleur
+        if (random.nextInt(10) < 8) {
+            return new ItemShape(genererFormeAleatoire(random));
+        } else {
+            Couleur[] couleurs = {Couleur.Red, Couleur.Green, Couleur.Blue, Couleur.Yellow, Couleur.Purple, Couleur.Cyan, Couleur.White};
+            return new ItemColor(couleurs[random.nextInt(couleurs.length)]);
+        }
+    }
+
+    private String genererFormeAleatoire(Random random) {
+        StringBuilder forme = new StringBuilder();
+        SubShape[] shapes = {SubShape.Carre, SubShape.Circle, SubShape.Fan, SubShape.Star, SubShape.None};
+        Couleur[] couleurs = {Couleur.Red, Couleur.Green, Couleur.Blue, Couleur.Yellow, Couleur.Purple, Couleur.Cyan, Couleur.White};
+
+        for (int i = 0; i < 4; i++) {
+            SubShape shape = shapes[random.nextInt(shapes.length)];
+            if (shape == SubShape.None) {
+                forme.append("--");
+            } else {
+                Couleur couleur = couleurs[random.nextInt(couleurs.length)];
+                forme.append(shape.adapterEnString()).append(couleur.adapterEnString());
+            }
+        }
+        return forme.toString();
+    }
 
     /**
      * Indique si p est contenu dans la grille
@@ -185,4 +232,4 @@ public class Plateau extends Observable implements Runnable {
         setChanged();
         notifyObservers();
     }
-}
+    }

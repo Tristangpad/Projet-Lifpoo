@@ -1,10 +1,10 @@
 package vuecontroleur;
 
 public class Camera {
-    public int offsetX = 0;
-    public int offsetY = 0;
+    public int offsetX = 20;
+    public int offsetY = 20;
 
-    private static final int[] ZOOM_SIZES = {16, 24, 32, 48, 64, 82, 96, 128, 160};
+    private static final int[] ZOOM_SIZES = {50,56,64,72,80,88,96,104,112,120,128};
 
     private int zoomIndex = 5;
 
