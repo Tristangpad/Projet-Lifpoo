@@ -14,12 +14,16 @@ public class Niveau {
     public Niveau(String formeDemander, int objectif) {
         this.formeDemander = formeDemander;
         this.objectif = objectif;
-        this.progression = 0;//set la prog a 0
+        this.progression = 0;//set la progression a 0
     }
 
+    public Niveau genereNiveauRandom(Niveau n){
+        return n;
+    }
     public String getFormeDemander() {return formeDemander;}
 
-    //si la forme demander ne correspond pas a l'item passer ne paramètre return false
+    //si la forme demander ne correspond pas a l'item passer en paramètre return false
+    //teste aussi les différentes rotations possible en cas d'utilisation du rotater
     public boolean verifierItem(ItemShape item) {
         return Objects.equals(item.getConfigItem(), formeDemander);
     }

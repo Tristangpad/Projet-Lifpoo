@@ -59,7 +59,7 @@ public class ItemShape extends Item {
                 case 'p'  : tabColors[i] = Couleur.Purple; break;
                 case 'c' : tabColors[i] = Couleur.Cyan; break;
                 case 'w' : tabColors[i] = Couleur.White; break;
-                case '-' : tabColors[i] = null; break;
+                case '-' : tabColors[i] = Couleur.None; break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + str.charAt((i + 1)*2));
             }
@@ -78,8 +78,8 @@ public class ItemShape extends Item {
     public ItemShape[] couper(){
         //fonction pour le cutter
         //prends les formes et couleurs de la shape de base, les sépares et crée deux nouvelles combler par du vide : "--"
-        String moitierDroite = ""+ adapterShape(tabSubShapes[0]) + adapterCouleur(tabColors[0]) + adapterShape(tabSubShapes[2]) + adapterCouleur(tabColors[2]) + "--"  + "--";
-        String moitierGauche = "--" + "--" + adapterShape(tabSubShapes[1]) + adapterCouleur(tabColors[1]) + adapterShape(tabSubShapes[3]) + adapterCouleur(tabColors[3]) + "";
+        String moitierDroite = ""+ tabSubShapes[0].adapterEnString() + tabColors[0].adapterEnString() + tabSubShapes[2].adapterEnString() + tabColors[2].adapterEnString() + "--"  + "--";
+        String moitierGauche = "--" + "--" + tabSubShapes[1].adapterEnString() + tabColors[1].adapterEnString() + tabSubShapes[3].adapterEnString() + tabColors[3].adapterEnString() + "";
 
         //debug
         //System.out.println(moitierGauche);
@@ -90,32 +90,6 @@ public class ItemShape extends Item {
         return itemConteneur;
     }
 //TODO : finir les diff cas
-    //pour recrée une forme en fonction de l'input il faut la déconstruire
-    /*
-    Prends un subshape en paraètre.
-    Retourne un string pour pouvoir reconstruire une forme derrière avec le string
-     */
-    public String adapterShape(SubShape s){
-        if(s == SubShape.Carre)return "C";
-        if(s == SubShape.Circle)return "R";
-        if(s == SubShape.Fan)return "F";
-        if(s == SubShape.Star)return "S";
-        if(s == SubShape.None)return "-";
-        return "-";
-    }
-
-    //pareil que pour adapterShape mais pour la couleur de la subshape
-    public String adapterCouleur(Couleur c){
-        if(c == Couleur.Red)return "r";
-        if(c == Couleur.White)return "w";
-        if(c == Couleur.Green)return "g";
-        if(c == Couleur.Blue)return "b";
-        if(c == Couleur.Yellow)return "y";
-        if(c == Couleur.Purple)return "p";
-        if(c == Couleur.Cyan)return "c";
-        return "-";
-    }
-
 
     public void rotate(boolean Horaire) {
         SubShape[] bufferSubShapes = new SubShape[4];
@@ -143,6 +117,10 @@ public class ItemShape extends Item {
             bufferColors[2] = tabColors[3];
             bufferColors[3] = tabColors[0];
         }
+        this.configurationItem = "" + bufferSubShapes[0].adapterEnString() + bufferColors[0].adapterEnString()
+                + bufferSubShapes[1].adapterEnString() + bufferColors[1].adapterEnString()
+                + bufferSubShapes[2].adapterEnString() + bufferColors[2].adapterEnString()
+                + bufferSubShapes[3].adapterEnString() + bufferColors[3].adapterEnString() + "";
         tabSubShapes = bufferSubShapes;
         tabColors = bufferColors;
 
@@ -154,10 +132,10 @@ public class ItemShape extends Item {
         if ((tabSubShapes[2] == SubShape.None && tabSubShapes[3] == SubShape.None) && (ShapeSup.tabSubShapes[0] == SubShape.None && ShapeSup.tabSubShapes[1] == SubShape.None)) {
 
             String formeReunie = ""
-                    + adapterShape(tabSubShapes[0]) + adapterCouleur(tabColors[0])
-                    + adapterShape(tabSubShapes[1]) + adapterCouleur(tabColors[1])
-                    + adapterShape(ShapeSup.tabSubShapes[2]) + adapterCouleur(ShapeSup.tabColors[2])
-                    + adapterShape(ShapeSup.tabSubShapes[3]) + adapterCouleur(ShapeSup.tabColors[3]);
+                    + tabSubShapes[0].adapterEnString() + tabColors[0].adapterEnString()
+                    + tabSubShapes[1].adapterEnString() + tabColors[1].adapterEnString()
+                    + ShapeSup.tabSubShapes[2].adapterEnString() + ShapeSup.tabColors[2].adapterEnString()
+                    + ShapeSup.tabSubShapes[3].adapterEnString() + ShapeSup.tabColors[3].adapterEnString();
             return new ItemShape(formeReunie);
         }
         return null;
@@ -179,5 +157,5 @@ public class ItemShape extends Item {
         }
     }
     //retourn eune chaine de caratère qui est composé des subshape et des subcolor
-    public String getConfigItem() { return configurationItem; }
+    public String getConfigItem() {return configurationItem; }
 }

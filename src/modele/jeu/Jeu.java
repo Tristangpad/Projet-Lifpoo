@@ -25,15 +25,16 @@ public class Jeu extends Thread{
 
     private static final Niveau[] NIVEAU = {
             //liste et créations des differents niveaux présent dans le jeux, possible d'en crées des aléatoires par la suite
-            new Niveau("CrCrCrCr", 5),
-            new Niveau("CrCr----", 10),
-            new Niveau("------Cr", 20),
+            new Niveau("CrCrCrCr", 3),
+            new Niveau("CrCr----", 3),
+            new Niveau("------Cr", 5),
     };
 
     public Jeu() {
         //inti du jeux, du placement des gisements et des niveaux
         plateau = new Plateau();
 
+        plateau.transformeCaseEnGisement(4,10, new ItemShape("CrCr----"));
         plateau.transformeCaseEnGisement(5,10, new ItemShape("Cr----Cr"));
         plateau.transformeCaseEnGisement(3,10, new ItemShape("CrCrCrCr"));
         plateau.transformeCaseEnGisement(3,3, new ItemShape("CrCrCbCr"));
