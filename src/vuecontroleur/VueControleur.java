@@ -47,6 +47,7 @@ public class VueControleur extends JFrame implements Observer {
 
     private JComponent grilleIP;
     private JPanel conteneurCamera;
+
     private boolean mousePressed = false;
     private ImagePanel[][] tabIP;
 
@@ -57,8 +58,8 @@ public class VueControleur extends JFrame implements Observer {
     private GridBagConstraints contrainteNiveauOverlay;
     private ImagePanel niveauOverlayForme;
 
-    private int casePX = -1;
-    private int casePY = -1;
+    private int casePX = -2;
+    private int casePY = -2;
 
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
@@ -281,7 +282,6 @@ public class VueControleur extends JFrame implements Observer {
         };
         if (m instanceof Cutter)    return icoCutter;
 
-        // --- CORRECTION AMBIGUÏTÉ : On précise que Painter vient de ton modèle ! ---
         if (m instanceof modele.plateau.Painter)   return icoPainter;
 
         if (m instanceof Stacker)   return icoStacker;
@@ -366,8 +366,6 @@ public class VueControleur extends JFrame implements Observer {
         menu.getBPoubelle().addActionListener(e -> jeu.setMachineChoisie(new Poubelle()));
         menu.getBPoubelle().setFocusable(false);
 
-        // --- CORRECTION SUPPRESSION : L'ancien bouton "getBRotater()" qui n'existe plus a été enlevé ici ---
-
         menu.getBRotaterD().addActionListener(e -> jeu.setMachineChoisie(new Rotater()));
         menu.getBRotaterD().setFocusable(false);
         menu.getBRotaterG().addActionListener(e -> jeu.setMachineChoisie(new RotaterInverser()));
@@ -375,7 +373,6 @@ public class VueControleur extends JFrame implements Observer {
         menu.getBCutter().addActionListener(e -> jeu.setMachineChoisie(new Cutter()));
         menu.getBCutter().setFocusable(false);
 
-        // --- CORRECTION AMBIGUÏTÉ : On précise que Painter vient de ton modèle ! ---
         menu.getBPainter().addActionListener(e -> jeu.setMachineChoisie(new modele.plateau.Painter()));
         menu.getBPainter().setFocusable(false);
 
@@ -439,8 +436,6 @@ public class VueControleur extends JFrame implements Observer {
 
     private void mettreAJourAffichage() {
         if (tabIP == null) return;
-
-        // Reset
         for (int x = 0; x < viewSizeX; x++) {
             for (int y = 0; y < viewSizeY; y++) {
                 tabIP[x][y].setBackground((Image) null);
